@@ -15,12 +15,12 @@
                 <div class="price">
                     <ins>
                         <span class="price-amount">
-                            {{ cart.gia_sp }}
+                            {{ VNDFormat(cart.gia_khuyen_mai) }}
                         </span>
                     </ins>
                     <del>
                         <span class="price-amount">
-                            {{ cart.gia_khuyen_mai }}
+                            {{ VNDFormat(cart.gia_sp) }}
                         </span>
                     </del>
                 </div>
@@ -36,6 +36,11 @@
 </template>
 
 <script>
+import { useStore } from "vuex";
+import { REMOVE_CART_ITEM } from "@/store/action.type";
+import { VNDFormat } from "@/utils/helpers";
+
+
 export default {
     name: 'CartItem',
     props: {
@@ -44,12 +49,15 @@ export default {
             required: true
         }
     },
-    setup() {
+    setup(props) {
+        const store = useStore();
         const deleteCart = () => {
-
+            const cartId = props.cart.id;
+            store.dispatch(REMOVE_CART_ITEM, cartId)
         }
         return {
-            deleteCart
+            deleteCart,
+            VNDFormat
         }
     }
 };

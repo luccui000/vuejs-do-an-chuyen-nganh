@@ -27,7 +27,7 @@ export default {
         const store = useStore();
         store.dispatch(FETCH_SANPHAMS_LIENQUAN);
         const sanphams = computed(() => store.getters.getSanPhamLienQuan);
-        console.log(sanphams)
+
         return {
             sanphams
         }

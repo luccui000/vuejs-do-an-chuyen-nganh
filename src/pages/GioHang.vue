@@ -24,45 +24,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="cart in carts" :key="cart.id" class="cart_item">
-                            <td class="product-thumbnail" data-title="Product Name">
-                                <RouterLink :to="cart.slug" class="prd-thumb">
-                                    <figure>
-                                        <img width="113" height="113" :src="cart.hinh_anh" alt="shipping cart">
-                                    </figure>
-                                </RouterLink>
-                                <RouterLink :to="cart.slug" class="prd-name">
-                                    {{ cart.ten_sp }}
-                                </RouterLink>
-                                <div class="action">
-                                    <a href="#" class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                    <a href="#" class="remove"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                                </div>
-                            </td>
-                            <td class="product-price" data-title="Price">
-                                <div class="price price-contain">
-                                    <ins><span class="price-amount">{{ cart.gia_sp }}</span></ins>
-                                    <del><span class="price-amount">{{ cart.gia_khuyen_mai }}</span></del>
-                                </div>
-                            </td>
-                            <td class="product-quantity" data-title="Quantity">
-                                <div class="quantity-box type1">
-                                    <div class="qty-input">
-                                        <input type="text" :value="cart.qty" data-max_value="20" data-min_value="1" data-step="1">
-                                        <a href="#" class="qty-btn btn-up"><i class="fa fa-caret-up" aria-hidden="true"></i></a>
-                                        <a href="#" class="qty-btn btn-down"><i class="fa fa-caret-down" aria-hidden="true"></i></a>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="product-subtotal" data-title="Total">
-                                <div class="price price-contain">
-                                    <ins>
-                                        <span class="price-amount">{{  }}</span>
-                                    </ins>
-                                    <del><span class="price-amount">95.00</span></del>
-                                </div>
-                            </td>
-                        </tr>
+                        <CartRow v-for="cart in carts" :key="cart.id" :cart="cart" />
                     </tbody>
                 </table>
                 <div class="d-flex justify-content-between">
@@ -114,9 +76,11 @@
 <script>
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
+import CartRow from "@/components/Cart/CartRow";
 
 export default {
     name: "GioHang",
+    components: { CartRow },
     setup() {
         const store = useStore();
         const carts = computed(() => store.getters.getAllCarts);

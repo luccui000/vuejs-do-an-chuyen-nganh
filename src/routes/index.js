@@ -5,6 +5,7 @@ import SanPham from '@/pages/SanPham';
 import ChiTietSanPham from '@/pages/ChiTietSanPham';
 import DanhSachSanPham from '@/pages/DanhSachSanPham';
 import GioHang from "@/pages/GioHang";
+import LienHe from "@/pages/LienHe";
 
 const routes = [
     {
@@ -25,6 +26,7 @@ const routes = [
     },
     {
         path: '/san-pham/:slug',
+        name: 'ChiTietSanPham',
         component: ChiTietSanPham,
         meta: {
             layout: 'Default',
@@ -82,6 +84,23 @@ const routes = [
                 }
             ]
         }
+    },
+    {
+        path: '/lien-he',
+        name: 'LienHe',
+        component: LienHe,
+        meta:  {
+            breadcrumbs: [
+                {
+                    name: 'Trang chủ',
+                    url: '/'
+                },
+                {
+                    name: 'Liên hệ',
+                    url: ''
+                }
+            ]
+        }
     }
 
 ];
@@ -89,5 +108,11 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 });
+
+router.beforeEach((to, from, next) => {
+    // if (to.name !== 'Login') next({ name: 'Login' })
+    console.log(to, from)
+    next()
+})
 
 export default router;

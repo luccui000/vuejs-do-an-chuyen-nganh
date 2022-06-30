@@ -3,7 +3,7 @@ import {
     FETCH_SANPHAMS_LIENQUAN,
     FETCH_SANPHAMS_MUANHIEU,
     FETCH_SANPHAMS_UUDAI,
-    FETCH_SANPHAMS_BY_SLUG
+    FETCH_SANPHAMS_BY_SLUG, SEARCH_SANPHAMS
 } from "@/store/action.type";
 import apis from '@/services/api.service';
 import { chunkArray, formatSanPham, VNDFormat } from '@/utils/helpers';
@@ -15,7 +15,8 @@ const states = {
     sanpham_filters: [],
     sanpham_lienquan: [],
     sanpham_muanhieu: [],
-    sanpham_uudai: []
+    sanpham_uudai: [],
+    sanpham_timkiem: []
 };
 
 const getters = {
@@ -55,6 +56,16 @@ const getters = {
         if(state.sanpham) {
             return state.sanpham;
         }
+    },
+    getSanPhamTimKiem(state)  {
+        if(state.sanpham_timkiem) {
+            return state.sanpham_timkiem.map(sanpham => {
+                return {
+                    ...sanpham,
+                    slug: "/" + endpoint.SAN_PHAM + "/" + sanpham.slug
+                }
+            });
+        }
     }
 }
 const actions = {
@@ -83,6 +94,10 @@ const actions = {
     async [FETCH_SANPHAMS_BY_SLUG]({ commit }, slug) {
         const { data } = await apis.get(`${endpoint.SAN_PHAM}/${slug}`);
         commit(FETCH_SANPHAMS_BY_SLUG, data);
+    },
+    async [SEARCH_SANPHAMS]({ commit }, query) {
+        const { data } = apis.get(`${endpoint.SAN_PHAM}?s=${query}`)
+        commit(SEARCH_SANPHAMS, data.data)
     }
 }
 const mutations = {
@@ -105,8 +120,10 @@ const mutations = {
     },
     [FETCH_SANPHAMS_BY_SLUG](state, sanpham) {
         state.sanpham = sanpham;
+    },
+    [SEARCH_SANPHAMS](state, sanphams) {
+        state.sanpham_timkiem = sanphams;
     }
-
 }
 export default {
     namespace: true,

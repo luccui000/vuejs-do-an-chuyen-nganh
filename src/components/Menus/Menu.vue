@@ -65,7 +65,7 @@
                 <li class="menu-item"><a href="#">Seasonal Fruit Plate</a></li>
             </ul>
         </menu-item>
-        <menu-item name="Liên hệ" type="menu-1" to="#"></menu-item>
+        <menu-item name="Liên hệ" type="menu-1" to="/lien-he"></menu-item>
     </ul>
 </template>
 

@@ -1,5 +1,5 @@
 import { VNDFormat } from '@/utils/helpers';
-import { ADD_TO_CART } from '@/store/action.type';
+import { ADD_TO_CART, REMOVE_CART_ITEM, UPDATE_CART_QTY } from "@/store/action.type";
 import endpoint from "@/apis/endpoint";
 
 const CART_LOCAL_STORAGE = 'cart_storage';
@@ -17,9 +17,7 @@ const getters = {
             return state.giohangs.map(function(item) {
                 return {
                     ...item,
-                    slug: "/" + endpoint.SAN_PHAM + "/" + item.slug,
-                    gia_sp: VNDFormat(item.gia_sp),
-                    gia_khuyen_mai: VNDFormat(item.gia_khuyen_mai),
+                    slug: "/" + endpoint.SAN_PHAM + "/" + item.slug
                 }
             });
         }
@@ -33,8 +31,7 @@ const getters = {
         }
     },
     getTotalItems(state) {
-        if(state.giohangs)
-            return state.giohangs.length;
+        return state.giohangs.length;
     }
 }
 const actions = {
@@ -46,6 +43,13 @@ const actions = {
             ...payload.sanpham,
             qty: payload.qty
         })
+    },
+    [REMOVE_CART_ITEM]({ commit }, cartId) {
+        commit(REMOVE_CART_ITEM, cartId)
+    },
+    [UPDATE_CART_QTY]({ commit }, payload) {
+        console.log(payload)
+        commit(UPDATE_CART_QTY, payload)
     }
 }
 const mutations = {
@@ -58,6 +62,18 @@ const mutations = {
             state.giohangs.push(payload);
         }
         localStorage.setItem(CART_LOCAL_STORAGE, JSON.stringify(state.giohangs));
+    },
+    [UPDATE_CART_QTY](state, payload) {
+        const idx = state.giohangs.findIndex(el => el.id === payload.id);
+        if(idx >= 0) {
+            state.giohangs[idx].qty += payload.qty;
+            localStorage.setItem(CART_LOCAL_STORAGE, JSON.stringify(state.giohangs));
+        }
+    },
+    [REMOVE_CART_ITEM](state, cartId) {
+        const filterCart = state.giohangs.filter(el => el.id !== cartId);
+        console.log(filterCart)
+        localStorage.setItem(CART_LOCAL_STORAGE, JSON.stringify(filterCart));
     }
 }
 
