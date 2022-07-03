@@ -1,5 +1,5 @@
 <template>
-    <div class="hero-section hero-background" :style="{ 'background-image': `url(${bgContent})`}">
+    <div class="hero-section hero-background" :style="{ 'background-image': `url(${require('@/assets/images/hero_bg.jpg')})`}">
         <h1 class="page-title">Trang giỏ hàng</h1>
     </div>
     <div class="container shopping-cart-container mt-2">
@@ -12,7 +12,7 @@
             </ul>
         </nav>
         <div class="row">
-            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h3 class="box-title">Giỏ hàng của bạn</h3>
                 <table class="shop_table cart-form">
                     <thead>
@@ -24,85 +24,75 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <CartRow v-for="cart in carts" :key="cart.id" :cart="cart" />
+                        <CartRow
+                            v-for="cart in carts"
+                            :key="cart.id"
+                            :cart="cart"
+                            @thaydoisoluong="thayDoiSoLuong"
+                        />
                     </tbody>
                 </table>
-                <div class="d-flex justify-content-between">
-                    <button class="btn btn-danger btn-back">Trở về trang chủ</button>
-                    <button class="btn btn-default btn-back">Xóa tất cả</button>
+                <div class="d-flex justify-content-between mt-3">
+                    <RouterLink to="/" class="btn btn-danger btn-back">
+                      Trở về trang chủ
+                    </RouterLink>
+                    <button @click="removeAllCart" class="btn btn-default btn-back">Xóa tất cả</button>
                 </div>
-            </div>
-            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-                <div class="shpcart-subtotal-block">
-                    <div class="subtotal-line">
-                        <b class="stt-name">Subtotal <span class="sub">(2ittems)</span></b>
-                        <span class="stt-price">£170.00</span>
-                    </div>
-                    <div class="subtotal-line">
-                        <b class="stt-name">Shipping</b>
-                        <span class="stt-price">£0.00</span>
-                    </div>
-                    <div class="tax-fee">
-                        <p class="title">Est. Taxes &amp; Fees</p>
-                        <p class="desc">Based on 56789</p>
-                    </div>
-                    <div class="btn-checkout">
-                        <a href="#" class="btn checkout">Check out</a>
-                    </div>
-                    <div class="biolife-progress-bar">
-                        <table>
-                            <tbody><tr>
-                                <td class="first-position">
-                                    <span class="index">$0</span>
-                                </td>
-                                <td class="mid-position">
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                                <td class="last-position">
-                                    <span class="index">$99</span>
-                                </td>
-                            </tr>
-                        </tbody></table>
-                    </div>
-                    <p class="pickup-info"><b>Free Pickup</b> is available as soon as today More about shipping and pickup</p>
+                <div class="subtotal-line">
+                    <b class="stt-name">Tạm tính <span class="sub">({{ totalItem }} sp)</span></b>
+                    <span class="stt-price">{{ VNDFormat(totalPrice) }}</span>
                 </div>
+                <p class="my-2">Chọn dịch vụ giao hàng</p>
+                <div class="subtotal-line">
+                    <b class="stt-name">Tiêu chuẩn</b>
+                    <span class="stt-price">0đ - {{ VNDFormat(50000) }}</span>
+                </div>
+                <RouterLink :to="{ name: 'ThanhToan' }" class="btn btn-danger btn-block mt-4">
+                    Tiến hành đặt hàng
+                </RouterLink>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
-import CartRow from "@/components/Cart/CartRow";
+import { useRoute } from "vue-router";
+import CartRow from "@/pages/GioHang/CartRow"
+import { VNDFormat } from "@/utils/helpers";
+
+import {
+    REMOVE_ALL_CART_ITEM,
+    UPDATE_CART_QTY
+} from "@/store/action.type";
 
 export default {
     name: "GioHang",
     components: { CartRow },
     setup() {
         const store = useStore();
+        const route = useRoute();
         const carts = computed(() => store.getters.getAllCarts);
-        const breadcrumbs = ref([
-            {
-                text: 'Admin',
-                href: '#'
-            },
-            {
-                text: 'Manage',
-                href: '#'
-            },
-            {
-                text: 'Library',
-                active: true
-            }
-        ]);
+        const totalItem = computed(() => store.getters.getTotalItems)
+        const totalPrice = computed(() => store.getters.getTotalPrice)
+        const breadcrumbs = computed(() => route.meta.breadcrumbs)
+
+        const thayDoiSoLuong = (payload) => {
+            store.dispatch(UPDATE_CART_QTY, payload)
+        }
+        const removeAllCart = () => {
+           store.dispatch(REMOVE_ALL_CART_ITEM)
+        }
 
         return {
             carts,
             breadcrumbs,
-            bgContent: require('@/assets/images/hero_bg.jpg')
+            removeAllCart,
+            thayDoiSoLuong,
+            totalItem,
+            totalPrice,
+            VNDFormat
         }
     }
 }

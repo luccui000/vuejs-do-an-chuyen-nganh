@@ -5,6 +5,7 @@ import router from '@/routes';
 import { BootstrapVue3 } from 'bootstrap-vue-3'
 
 import registerComponent from "@/utils/registerComponent";
+import "@/store/subscriber";
 import "@/utils/stylesheet";
 
 const app = createApp(App);

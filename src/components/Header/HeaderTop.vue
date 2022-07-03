@@ -12,6 +12,16 @@
                     <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
                     <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
                     <li><a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
+                    <li v-if="khachhang">
+                        <RouterLink :to="{ name: 'ThongTinCaNhan' }">
+                            {{ khachhang.ten_khach_hang }}
+                        </RouterLink>
+                    </li>
+                    <li v-else>
+                        <RouterLink to="/dang-nhap">
+                            Đăng nhập/ Đăng ký
+                        </RouterLink>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -19,8 +29,19 @@
 </template>
 
 <script>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
 export default {
-    name: 'HeaderTop'
+    name: 'HeaderTop',
+    setup() {
+        const store = useStore();
+        const khachhang = computed(() => store.state.auth.khachhang);
+
+        return {
+            khachhang
+        }
+    }
 };
 </script>
 

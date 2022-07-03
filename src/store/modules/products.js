@@ -1,13 +1,17 @@
+import { endpoint } from "@/apis"
+import apis from '@/services/api.service';
 import {
     FETCH_ALL_SANPHAMS, FETCH_SANPHAMS_FILTER,
     FETCH_SANPHAMS_LIENQUAN,
     FETCH_SANPHAMS_MUANHIEU,
     FETCH_SANPHAMS_UUDAI,
-    FETCH_SANPHAMS_BY_SLUG, SEARCH_SANPHAMS
+    FETCH_SANPHAMS_BY_SLUG, SEARCH_SANPHAMS, ORDER_SAN_PHAM_THEO_GIA, GET_SAN_PHAM_FROM_TO
 } from "@/store/action.type";
-import apis from '@/services/api.service';
-import { chunkArray, formatSanPham, VNDFormat } from '@/utils/helpers';
-import { endpoint } from "@/apis"
+import {
+    chunkArray,
+    formatSanPham,
+    normalizeSlug,
+} from "@/utils/helpers";
 
 const states = {
     sanpham: {},
@@ -16,13 +20,13 @@ const states = {
     sanpham_lienquan: [],
     sanpham_muanhieu: [],
     sanpham_uudai: [],
-    sanpham_timkiem: []
+    sanpham_timkiem: [],
 };
 
 const getters = {
     getSanPhamLienQuan(state) {
         if(state.sanpham_lienquan) {
-            return formatSanPham(state.sanpham_lienquan);
+            return normalizeSlug(state.sanpham_lienquan);
         }
     },
     getAllSanPham(state) {
@@ -37,14 +41,8 @@ const getters = {
     },
     getSanPhamMuaNhieu(state) {
         if(state.sanpham_muanhieu) {
-            const sanpham = state.sanpham_muanhieu.map(item => {
-                return {
-                    ...item,
-                    gia_sp: VNDFormat(item.gia_sp),
-                    gia_khuyen_mai: VNDFormat(item.gia_khuyen_mai),
-                }
-            });
-            return chunkArray(sanpham, 2);
+            const sanphams = normalizeSlug(state.sanpham_muanhieu);
+            return chunkArray(sanphams, 2);
         }
     },
     getSanPhamUuDai(state) {
@@ -69,15 +67,9 @@ const getters = {
     }
 }
 const actions = {
-    async [FETCH_ALL_SANPHAMS]({ commit }) {
-        const promiseSanPham = apis.get(endpoint.SAN_PHAM);
-        const promiseSanPhamUuDais = apis.get(endpoint.SAN_PHAM_UU_DAI);
-
-        const [resolveSanPham, resolveSanPhamUudai] = await Promise.all([promiseSanPham, promiseSanPhamUuDais]);
-
-        commit(FETCH_ALL_SANPHAMS, resolveSanPham.data)
-        commit(FETCH_SANPHAMS_FILTER, resolveSanPham.data);
-        commit(FETCH_SANPHAMS_MUANHIEU, resolveSanPhamUudai.data);
+    async [FETCH_ALL_SANPHAMS]({ commit, dispatch }) {
+        const sanphams = await dispatch('getAllSanPham')
+        commit(FETCH_ALL_SANPHAMS, sanphams)
     },
     async [FETCH_SANPHAMS_LIENQUAN]({ commit }) {
         const { data } = await apis.get(endpoint.SAN_PHAM_LIEN_QUAN);
@@ -98,13 +90,24 @@ const actions = {
     async [SEARCH_SANPHAMS]({ commit }, query) {
         const { data } = apis.get(`${endpoint.SAN_PHAM}?s=${query}`)
         commit(SEARCH_SANPHAMS, data.data)
+    },
+    async [GET_SAN_PHAM_FROM_TO]({ commit, dispatch }, payload) {
+        const sanphams = await dispatch("getAllSanPham");
+        commit(FETCH_ALL_SANPHAMS, sanphams)
+        commit(GET_SAN_PHAM_FROM_TO, payload)
+    },
+    getAllSanPham() {
+        return new Promise((resolve, reject) => {
+            apis.get('/san-pham/tat-ca')
+                .then(response => {
+                    resolve(response.data)
+                }).catch(error => reject(error))
+        })
     }
 }
 const mutations = {
     [FETCH_ALL_SANPHAMS](state, sanphams) {
-        state.sanphams = {
-            ...sanphams
-        };
+        state.sanphams = sanphams;
     },
     [FETCH_SANPHAMS_LIENQUAN](state, sanphams) {
         state.sanpham_lienquan = sanphams;
@@ -123,6 +126,18 @@ const mutations = {
     },
     [SEARCH_SANPHAMS](state, sanphams) {
         state.sanpham_timkiem = sanphams;
+    },
+    [ORDER_SAN_PHAM_THEO_GIA](state, orderBy) {
+        state.sanphams = state.sanphams.sort((a, b) => {
+            const comp = a.gia_khuyen_mai - b.gia_khuyen_mai;
+            if(comp === 0)
+                return 0;
+            const sign = Math.abs(comp) / comp;
+            return orderBy === 'asc' ? sign : -sign;
+        })
+    },
+    [GET_SAN_PHAM_FROM_TO](state, { from, to}) {
+        state.sanphams = state.sanphams.filter(sp => sp.gia_khuyen_mai > from && sp.gia_khuyen_mai <= to);
     }
 }
 export default {

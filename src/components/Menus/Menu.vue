@@ -83,5 +83,7 @@ export default {
 </script>
 
 <style scoped>
-
+#primary-menu {
+  z-index: 10000;
+}
 </style>

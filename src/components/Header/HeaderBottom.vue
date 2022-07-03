@@ -18,35 +18,11 @@
                         <Transition>
                             <div v-show="isShow" class="wrapper-menu">
                                 <ul class="menu clone-main-menu">
-                                    <li class="menu-item">
-                                        <RouterLink to="#" class="menu-title"><i class="biolife-icon icon-fast-food"></i>
-                                            Fastfood
-                                        </RouterLink>
-                                    </li>
-                                    <li class="menu-item">
-                                        <RouterLink to="#" class="menu-title"><i class="biolife-icon icon-beef"></i>
-                                            Fresh Meat
-                                        </RouterLink>
-                                    </li>
-                                    <li class="menu-item">
-                                        <RouterLink to="#" class="menu-title"><i class="biolife-icon icon-onions"></i>
-                                            Fresh Onion
-                                        </RouterLink>
-                                    </li>
-                                    <li class="menu-item">
-                                        <RouterLink to="#" class="menu-title"><i class="biolife-icon icon-avocado"></i>
-                                            Papaya &amp; Crisps
-                                        </RouterLink>
-                                    </li>
-                                    <li class="menu-item">
-                                        <RouterLink to="#" class="menu-title"><i class="biolife-icon icon-contain"></i>
-                                            Oatmeal
-                                        </RouterLink>
-                                    </li>
-                                    <li class="menu-item">
-                                        <RouterLink to="#" class="menu-title"><i class="biolife-icon icon-fresh-juice"></i>
-                                            Fresh Bananas &amp; Plantains
-                                        </RouterLink>
+                                    <li class="menu-item" v-for="danhmuc in danhmucs" :key="danhmuc.id">
+                                      <RouterLink to="#" class="menu-title">
+                                         <i class="biolife-icon" :class="danhmuc.hinh_anh"></i>
+                                        {{ danhmuc.ten_dm }}
+                                      </RouterLink>
                                     </li>
                                 </ul>
                             </div>
@@ -67,8 +43,10 @@
 </template>
 
 <script>
-import { ref, reactive } from "vue";
+import { ref, computed } from "vue";
+import { useStore } from "vuex"
 import SearchBar from '@/components/Header/SearchBar';
+import {FETCH_ALL_DANHMUCS} from "@/store/action.type";
 
 export default {
     name: 'HeaderBottom',
@@ -76,28 +54,14 @@ export default {
         SearchBar
     },
     setup() {
-        const categories = reactive([
-            {
-                id: 1,
-                name: 'Trái cây tươi',
-            },
-            {
-                id: 2,
-                name: 'Rau củ & quả'
-            },
-            {
-                id: 3,
-                name: 'Bơ và trứng'
-            },
-            {
-                id: 4,
-                name: 'Trái cây nhập khẩu'
-            }
-        ]);
+        const store = useStore();
         const isShow = ref(false);
+        store.dispatch(FETCH_ALL_DANHMUCS)
+        const danhmucs = computed(() => store.getters.getAllDanhMucs);
+
         return {
             isShow,
-            categories
+            danhmucs
         }
     }
 };
@@ -127,6 +91,7 @@ export default {
     line-height: 45px;
     padding: 0 20px;
     display: block;
+    cursor: pointer;
 }
 .menu-item .menu-title {
     color: #333333;
@@ -146,5 +111,8 @@ export default {
     display: inline-block;
     float: left;
     line-height: 45px;
+}
+.menu-item:nth-last-child(1) .menu-title {
+  border-bottom: 0px;
 }
 </style>

@@ -25,9 +25,9 @@
 </template>
 
 <script>
-import CartItem from '@/components/Cart/CartItem';
 import { computed } from 'vue'
 import { useStore } from 'vuex';
+import CartItem from '@/components/Cart/CartItem';
 
 export default {
     name: 'Cart',
@@ -37,14 +37,13 @@ export default {
     setup() {
         const store = useStore();
         const carts = computed(() => store.getters.getAllCarts);
-        const totalPrice = computed(() => store.getters.getTotalPrice);
+        const totalPrice = computed(() => store.getters.getTotalPrice)
         const totalItem = computed(() => store.getters.getTotalItems);
 
         return {
             carts,
             totalPrice,
             totalItem
-
         }
     }
 };

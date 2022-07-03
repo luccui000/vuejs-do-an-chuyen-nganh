@@ -24,12 +24,32 @@
                         <div class="flt-item to-left">
                             <span class="flt-title">Bộ lọc</span>
                             <div class="wrap-selectors">
-                                <form>
-                                    <select class="form-select" @change="sortPrice($event.target.value)">
-                                        <option value="asc">Giá tăng dần</option>
-                                        <option value="desc">Giá giảm dần</option>
-                                    </select>
-                                </form>
+                                <select
+                                    class="form-control product-sorting"
+                                    @change="handlePriceSort"
+                                >
+                                    <option value="asc">Giá tăng dần</option>
+                                    <option value="desc">Giá giảm dần</option>
+                                </select>
+                            </div>
+                            <div class="wrap-selectors">
+                                <select
+                                    class="form-control product-sorting"
+                                    @change="getPriceFromTo"
+                                >
+                                    <option value="1">
+                                        Giá từ {{ VNDFormat(0) }} - {{ VNDFormat(50000) }}
+                                    </option>
+                                    <option value="2">
+                                        Giá từ {{ VNDFormat(50000) }} - {{ VNDFormat(100000) }}
+                                    </option>
+                                    <option value="3">
+                                        Giá từ {{ VNDFormat(100000) }} - {{ VNDFormat(500000) }}
+                                    </option>
+                                    <option value="4">
+                                        Giá từ {{ VNDFormat(500000) }}+
+                                    </option>
+                                </select>
                             </div>
                         </div>
                         <div class="flt-item to-right">
@@ -56,7 +76,7 @@
             </div>
         </div>
         <div class="row">
-            <ul class="products-list">
+            <ul class="row">
                 <SanPham
                     v-for="sanpham in sanphams"
                     :key="sanpham.id"
@@ -69,18 +89,20 @@
 </template>
 
 <script>
-import { computed, reactive, ref } from "vue";
-import { Carousel, Slide, Navigation } from "vue3-carousel";
+import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
+import { Carousel, Slide, Navigation } from "vue3-carousel";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import TopSanPhamItem from "@/components/DanhSachSanPham/TopSanPhamItem";
-
+import SanPham from "@/pages/SanPham/SanPham";
 import {
+    ADD_TO_CART,
     FETCH_ALL_SANPHAMS,
-    FETCH_SANPHAMS_UUDAI
+    FETCH_SANPHAMS_UUDAI, GET_SAN_PHAM_FROM_TO,
+    ORDER_SAN_PHAM_THEO_GIA
 } from "@/store/action.type";
-import SanPham from "@/components/Product/SanPham";
+import { VNDFormat } from "@/utils/helpers";
 
 export default {
     name: "DanhSachSanPham",
@@ -96,42 +118,68 @@ export default {
         const route = useRoute();
         const store = useStore();
 
-        store.dispatch(FETCH_SANPHAMS_UUDAI);
         store.dispatch(FETCH_ALL_SANPHAMS);
+        store.dispatch(FETCH_SANPHAMS_UUDAI);
 
-        const bolocs = reactive({
-            s: "",
-            sort: {
-                gia_sp: ""
-            }
-        });
+
+        const sanphams = computed(() => store.state.products.sanphams)
         const refSanPham = ref([]);
         const topSanPham = computed(() => store.getters.getSanPhamUuDai);
         const breadcrumbs = computed(() => route.meta.breadcrumbs);
-        const sanphams = computed(() => store.getters.getAllSanPham);
 
-        const handleThemVaoGioHang = (id) => {
-            console.log(id)
+        const handleThemVaoGioHang = (sanpham) => {
+            store.dispatch(ADD_TO_CART, {
+              sanpham,
+              qty: 1,
+            })
         }
-        const sortPrice = (sortValue) => {
-            bolocs.sort.gia_sp = sortValue;
-            if(bolocs.sort.gia_sp === "asc" || bolocs.sort.gia_sp === "desc") {
-                refSanPham.value = sanphams.value.sort((a, b) => {
-                    const cmp = a.gia_sp - b.gia_sp;
-                    if(cmp === 0) return 0;
-                    const sign = Math.abs(cmp) / cmp;
-                    return bolocs.sort.gia_sp === "asc" ? sign : -sign;
-                })
+        const handlePriceSort = (e) => {
+            store.commit(ORDER_SAN_PHAM_THEO_GIA, e.target.value)
+        }
+        const getPriceFromTo = (e) => {
+            switch (e.target.value) {
+                case "1":
+                    store.dispatch(GET_SAN_PHAM_FROM_TO, {
+                        from: 0,
+                        to: 50000
+                    })
+                break;
+                case "2":
+                    store.dispatch(GET_SAN_PHAM_FROM_TO, {
+                        from: 50000,
+                        to: 100000
+                    })
+                    break;
+                case "3":
+                    store.dispatch(GET_SAN_PHAM_FROM_TO, {
+                        from: 100000,
+                        to: 500000
+                    })
+                    break;
+                case "4":
+                    store.dispatch(GET_SAN_PHAM_FROM_TO, {
+                        from: 500000,
+                        to: 999999999999
+                    })
+                    break;
+                default:
+                    store.dispatch(GET_SAN_PHAM_FROM_TO, {
+                        from: 0,
+                        to: 999999999999
+                    })
+                    break;
             }
         }
+
         return {
             breadcrumbs,
             topSanPham,
             sanphams,
-            bolocs,
-            sortPrice,
-            handleThemVaoGioHang,
             refSanPham,
+            handleThemVaoGioHang,
+            handlePriceSort,
+            getPriceFromTo,
+            VNDFormat
         }
     }
 };
@@ -141,5 +189,17 @@ export default {
 .main-content {
     margin-top: 30px;
 }
-
+select.product-sorting {
+    box-shadow: none;
+    border: 2px solid #ccc;
+    padding: 2px 20px;
+    border-radius: 20px;
+}
+select.product-sorting:focus {
+    box-shadow: none;
+    border-color: #dddddd;
+}
+.wrap-selectors {
+    margin: 0 10px;
+}
 </style>

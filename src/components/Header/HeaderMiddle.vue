@@ -15,7 +15,7 @@
                 <div class="col-lg-3 col-md-3 col-md-6 col-xs-6">
                     <div class="biolife-cart-info">
                         <wishlist />
-                        <cart />
+                        <Cart />
                     </div>
                 </div>
             </div>

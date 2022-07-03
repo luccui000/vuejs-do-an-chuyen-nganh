@@ -54,6 +54,7 @@ export default {
         const store = useStore();
         store.dispatch(FETCH_SANPHAMS_MUANHIEU);
         const sanphamMuaNhieu = computed(() => store.getters.getSanPhamMuaNhieu);
+        console.log(sanphamMuaNhieu)
 
         return {
             store,

@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from "vue-router";
 import TrangChu from '@/pages/TrangChu';
 import CuaHang from '@/pages/CuaHang';
 import SanPham from '@/pages/SanPham';
@@ -86,6 +86,61 @@ const routes = [
         }
     },
     {
+        path: '/thanh-toan',
+        name: 'ThanhToan',
+        component: () => import('@/pages/ThanhToan'),
+        meta:  {
+            breadcrumbs: [
+                {
+                    name: 'Trang chủ',
+                    url: '/'
+                },
+                {
+                    name: 'Thanh toán',
+                    url: ''
+                }
+            ]
+        }
+    },
+    {
+        path: '/dang-nhap',
+        component: () => import('@/pages/DangNhap'),
+        meta:  {
+            breadcrumbs: [
+                {
+                    name: 'Trang chủ',
+                    url: '/'
+                },
+                {
+                    name: 'Đăng nhập',
+                    url: ''
+                }
+            ]
+        }
+    },
+    {
+        path: '/thong-tin-ca-nhan',
+        name: 'ThongTinCaNhan',
+        component: () => import('@/pages/ThongTinCaNhan'),
+        meta: {
+            breadcrumbs: [
+                {
+                    name: 'Trang chủ',
+                    url: '/'
+                },
+                {
+                    name: 'Thông tin cá nhân',
+                    url: ''
+                }
+            ]
+        },
+        beforeEnter: (to, from, next) => {
+            console.log(to)
+            console.log(from)
+            console.log(next)
+        }
+    },
+    {
         path: '/lien-he',
         name: 'LienHe',
         component: LienHe,
@@ -108,11 +163,5 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 });
-
-router.beforeEach((to, from, next) => {
-    // if (to.name !== 'Login') next({ name: 'Login' })
-    console.log(to, from)
-    next()
-})
 
 export default router;

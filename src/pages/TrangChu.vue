@@ -1,10 +1,10 @@
 <template>
-    <PrimaryBanner />
+    <CarouselSanPham />
     <div class="container related-product">
-        <RelatedProduct />
+        <SanPhamLienQuan />
     </div>
-    <FirstBanner />
-    <SecondBanner />
+    <BannerChinh />
+    <BannerGioiThieu />
     <div class="container mt-5">
         <div class="row">
             <div class="col-4 mx-0 px-0">
@@ -23,30 +23,30 @@
 </template>
 
 <script>
-  import PrimaryBanner from '@/components/Banner/PrimaryBanner';
-  import RelatedProduct from '@/components/RelatedProduct/RelatedProduct';
-  import FirstBanner from '@/components/Banner/FirstBanner';
-  import SecondBanner from '@/components/Banner/SecondBanner';
-  import DealLeft from "@/components/Deal/DealLeft";
-  import DealRight from "@/components/Deal/DealRight";
-  import FourBanner from '@/components/Banner/FourBanner';
+    import CarouselSanPham from "@/pages/TrangChu/CarouselSanPham";
+    import BannerChinh from "@/pages/TrangChu/Banner/BannerChinh";
+    import BannerGioiThieu from "@/pages/TrangChu/Banner/BannerGioiThieu";
+    import DealLeft from "@/components/Deal/DealLeft";
+    import DealRight from "@/components/Deal/DealRight";
+    import FourBanner from '@/components/Banner/FourBanner';
+    import SanPhamLienQuan from "@/pages/TrangChu/SanPhamLienQuan";
 
-  export default {
-    name: 'TrangChu',
-    components: {
-        FourBanner,
-        PrimaryBanner,
-        RelatedProduct,
-        FirstBanner,
-        SecondBanner,
-        DealLeft,
-        DealRight,
-    },
-    setup() {
-        return {
+    export default {
+        name: 'TrangChu',
+        components: {
+            CarouselSanPham,
+            BannerChinh,
+            BannerGioiThieu,
+            FourBanner,
+            DealLeft,
+            DealRight,
+            SanPhamLienQuan
+        },
+        setup() {
+            return {
+            }
         }
     }
-  }
 </script>
 
 <style>

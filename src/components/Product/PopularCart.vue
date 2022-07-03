@@ -10,17 +10,19 @@
             <div class="info">
                 <b class="categories">{{ sanpham.danhmuc.ten_dm }}</b>
                 <h4 class="product-title">
-                    <a href="#" class="pr-name" tabindex="0">{{ sanpham.ten_sp }}</a>
+                    <RouterLink :to="sanpham.slug" class="pr-name">
+                        {{ sanpham.ten_sp }}
+                    </RouterLink>
                 </h4>
                 <div class="price">
                     <ins>
                         <span class="price-amount">
-                            {{ sanpham.gia_khuyen_mai }}
+                            {{ VNDFormat(sanpham.gia_khuyen_mai) }}
                         </span>
                     </ins>
                     <del>
                         <span class="price-amount">
-                            {{ sanpham.gia_so }}
+                            {{ VNDFormat(sanpham.gia_sp) }}
                         </span>
                     </del>
                 </div>
@@ -28,7 +30,7 @@
                     <p class="star-rating">
                         <span class="width-80percent"></span>
                     </p>
-                    <span class="review-count">(05 Reviews)</span>
+                    <span class="review-count">(05 đánh giá)</span>
                 </div>
             </div>
         </div>
@@ -36,9 +38,18 @@
 </template>
 
 <script>
+
+import { VNDFormat } from "@/utils/helpers";
+
+
 export default {
     name: "PopularCart",
-    props: ['sanpham']
+    props: ['sanpham'],
+    setup() {
+        return {
+            VNDFormat
+        }
+    }
 }
 </script>
 

@@ -1,6 +1,9 @@
-import { VNDFormat } from '@/utils/helpers';
-import { ADD_TO_CART, REMOVE_CART_ITEM, UPDATE_CART_QTY } from "@/store/action.type";
-import endpoint from "@/apis/endpoint";
+import {
+    ADD_TO_CART,
+    REMOVE_CART_ITEM,
+    UPDATE_CART_QTY,
+    REMOVE_ALL_CART_ITEM
+} from "@/store/action.type";
 
 const CART_LOCAL_STORAGE = 'cart_storage';
 
@@ -14,21 +17,13 @@ const getters = {
         if(carts)
             state.giohangs = carts;
         if(state.giohangs) {
-            return state.giohangs.map(function(item) {
-                return {
-                    ...item,
-                    slug: "/" + endpoint.SAN_PHAM + "/" + item.slug
-                }
-            });
+            return state.giohangs;
         }
     },
     getTotalPrice(state) {
-        if(state.giohangs) {
-            const totalPrice = state.giohangs.reduce((prev, curr) => {
-                return prev += curr.gia_khuyen_mai * curr.qty;
-            }, 0);
-            return VNDFormat(totalPrice);
-        }
+        return state.giohangs.reduce((prev, curr) => {
+            return prev += curr.gia_khuyen_mai * curr.qty;
+        }, 0)
     },
     getTotalItems(state) {
         return state.giohangs.length;
@@ -48,8 +43,11 @@ const actions = {
         commit(REMOVE_CART_ITEM, cartId)
     },
     [UPDATE_CART_QTY]({ commit }, payload) {
-        console.log(payload)
         commit(UPDATE_CART_QTY, payload)
+    },
+    [REMOVE_ALL_CART_ITEM]({ commit, state }) {
+        if(state.giohangs.length)
+            commit(REMOVE_ALL_CART_ITEM)
     }
 }
 const mutations = {
@@ -72,8 +70,11 @@ const mutations = {
     },
     [REMOVE_CART_ITEM](state, cartId) {
         const filterCart = state.giohangs.filter(el => el.id !== cartId);
-        console.log(filterCart)
         localStorage.setItem(CART_LOCAL_STORAGE, JSON.stringify(filterCart));
+    },
+    [REMOVE_ALL_CART_ITEM](state) {
+        localStorage.removeItem(CART_LOCAL_STORAGE)
+        state.giohangs = [];
     }
 }
 

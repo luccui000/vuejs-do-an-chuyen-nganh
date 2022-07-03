@@ -30,3 +30,12 @@ export function formatSanPham(sanphams) {
         }
     })
 }
+
+export function normalizeSlug(sanphams) {
+    return sanphams.map(sanpham => {
+        return {
+            ...sanpham,
+            slug: "/" + endpoint.SAN_PHAM + "/" + sanpham.slug,
+        }
+    })
+}

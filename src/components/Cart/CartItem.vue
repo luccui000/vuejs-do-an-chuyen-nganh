@@ -2,7 +2,7 @@
     <li>
         <div class="minicart-item">
             <div class="thumb">
-                <RouterLink to="cart.slug">
+                <RouterLink :to="cart.slug">
                     <img :src="cart.hinh_anh" width="90" height="90" alt="National Fresh">
                 </RouterLink>
             </div>

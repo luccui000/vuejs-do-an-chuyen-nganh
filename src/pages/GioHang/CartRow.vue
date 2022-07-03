@@ -23,7 +23,7 @@
         <td class="product-quantity" data-title="Quantity">
             <div class="quantity-box type1">
                 <div class="qty-input">
-                    <input type="text" :value="cart.qty" data-step="1">
+                    <input type="text" :value="cart.qty" data-step="1" readonly>
                     <a @click="incrementQty" class="qty-btn btn-up cursor-pointer"><i class="fa fa-caret-up" aria-hidden="true"></i></a>
                     <a @click="decrementQty" class="qty-btn btn-down cursor-pointer"><i class="fa fa-caret-down" aria-hidden="true"></i></a>
                 </div>
@@ -51,20 +51,20 @@ export default {
             // store.dispatch()
         }
         const incrementQty = () => {
-            if(props.cart.qty < 1)
-                return;
-            emit('thaydoisoluong', {
-                sanpham_id: props.cart.id,
-                qty: 1
-            })
+            if(props.cart.qty < props.cart.tonkhos[0].so_luong) {
+                emit('thaydoisoluong', {
+                    id: props.cart.id,
+                    qty: 1
+                })
+            }
         }
         const decrementQty = () => {
-            if(props.cart.qty < 1)
-                return;
-            emit('thaydoisoluong', {
-                sanpham_id: props.cart.id,
-                qty: 1
-            })
+            if(props.cart.qty > 1) {
+                emit('thaydoisoluong', {
+                    id: props.cart.id,
+                    qty: -1
+                })
+            }
         }
         return {
             VNDFormat,

@@ -7,6 +7,9 @@ import posts from '@/store/modules/posts';
 import products from '@/store/modules/products';
 import sliders from '@/store/modules/sliders';
 import categories from '@/store/modules/categories';
+import auth from '@/store/modules/auth'
+import address from '@/store/modules/address'
+import shipping from "@/store/modules/shipping";
 
 const store = createStore({
     getters,
@@ -17,7 +20,10 @@ const store = createStore({
         sliders,
         carts,
         products,
-        categories
+        categories,
+        auth,
+        address,
+        shipping
     },
 });
 
