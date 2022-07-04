@@ -103,7 +103,25 @@ const routes = [
         }
     },
     {
+        path: '/dang-ky',
+        name: 'DangKy',
+        component: () => import('@/pages/DangKy'),
+        meta: {
+            breadcrumbs: [
+                {
+                    name: 'Trang chủ',
+                    url: '/'
+                },
+                {
+                    name: 'Đăng ký tài khoản',
+                    url: ''
+                }
+            ]
+        }
+    },
+    {
         path: '/dang-nhap',
+        name: 'DangNhap',
         component: () => import('@/pages/DangNhap'),
         meta:  {
             breadcrumbs: [
@@ -123,6 +141,7 @@ const routes = [
         name: 'ThongTinCaNhan',
         component: () => import('@/pages/ThongTinCaNhan'),
         meta: {
+            requiredAuth: true,
             breadcrumbs: [
                 {
                     name: 'Trang chủ',
@@ -133,11 +152,23 @@ const routes = [
                     url: ''
                 }
             ]
-        },
-        beforeEnter: (to, from, next) => {
-            console.log(to)
-            console.log(from)
-            console.log(next)
+        }
+    },
+    {
+        path: '/theo-doi-don-hang',
+        name: 'TheoDoiDonHang',
+        component: () => import('@/pages/TheoDoiDonHang'),
+        meta:  {
+            breadcrumbs: [
+                {
+                    name: 'Trang chủ',
+                    url: '/'
+                },
+                {
+                    name: 'Theo dõi đơn hàng',
+                    url: ''
+                }
+            ]
         }
     },
     {

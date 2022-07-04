@@ -37,7 +37,7 @@ export default {
     setup() {
         const store = useStore();
         const carts = computed(() => store.getters.getAllCarts);
-        const totalPrice = computed(() => store.getters.getTotalPrice)
+        const totalPrice = computed(() => store.getters.giohangs)
         const totalItem = computed(() => store.getters.getTotalItems);
 
         return {

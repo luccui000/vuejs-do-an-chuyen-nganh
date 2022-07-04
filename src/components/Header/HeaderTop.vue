@@ -12,6 +12,11 @@
                     <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
                     <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
                     <li><a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
+                    <li >
+                        <RouterLink :to="{ name: 'TheoDoiDonHang' }">
+                            Theo dõi đơn hàng
+                        </RouterLink>
+                    </li>
                     <li v-if="khachhang">
                         <RouterLink :to="{ name: 'ThongTinCaNhan' }">
                             {{ khachhang.ten_khach_hang }}
@@ -19,7 +24,7 @@
                     </li>
                     <li v-else>
                         <RouterLink to="/dang-nhap">
-                            Đăng nhập/ Đăng ký
+                            Đăng ký/ Đăng nhập
                         </RouterLink>
                     </li>
                 </ul>

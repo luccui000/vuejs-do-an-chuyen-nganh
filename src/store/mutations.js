@@ -1,4 +1,4 @@
-import * as mutationPost from './mutations-type/post';
+import * as mutationPost from './mutations-type/post'; 
 
 const mutations = {
     [mutationPost.CREATE_POST](state, payload) {
@@ -11,7 +11,7 @@ const mutations = {
     },
     [mutationPost.DELETE_POST](state, payload) {
         state.posts = state.posts.filter((post) => post.id !== payload.id);
-    },
+    }
 };
 
 export default mutations;

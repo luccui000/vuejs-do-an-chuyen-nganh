@@ -15,7 +15,7 @@
                 <div class="col-lg-3 col-md-3 col-md-6 col-xs-6">
                     <div class="biolife-cart-info">
                         <wishlist />
-                        <Cart />
+                        <GioHangTop />
                     </div>
                 </div>
             </div>
@@ -26,14 +26,14 @@
 <script>
 import { ref } from '@vue/reactivity';
 import Wishlist from '@/components/Wishlist/Wishlist';
-import Cart from '@/components/Cart/Cart';
 import Menu from '@/components/Menus/Menu';
+import GioHangTop from "@/pages/GioHang/GioHangTop";
 
 export default {
     name: "HeaderMiddle",
     components: {
+        GioHangTop,
         Wishlist,
-        Cart,
         Menu
     },
     setup() {

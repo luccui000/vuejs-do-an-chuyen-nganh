@@ -10,6 +10,7 @@ import categories from '@/store/modules/categories';
 import auth from '@/store/modules/auth'
 import address from '@/store/modules/address'
 import shipping from "@/store/modules/shipping";
+import orders from "@/store/modules/orders";
 
 const store = createStore({
     getters,
@@ -23,7 +24,8 @@ const store = createStore({
         categories,
         auth,
         address,
-        shipping
+        shipping,
+        orders
     },
 });
 

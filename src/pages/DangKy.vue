@@ -35,7 +35,6 @@
                 </div>
             </div>
 
-            <!--Go to Register form-->
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                 <div class="register-in-container">
                     <div class="intro">
@@ -47,7 +46,7 @@
                             <li>Theo dõi đơn hàng</li>
                             <li>Thêm sản phẩm yêu thích</li>
                         </ul>
-                        <RouterLink :to="{ name: 'DangKy' }" class="btn btn-bold">Tạo tài khoản</RouterLink>
+                        <RouterLink :to="{ name: 'DangNhap' }" class="btn btn-bold">Đăng nhập</RouterLink>
                     </div>
                 </div>
             </div>
@@ -65,7 +64,7 @@ import { LOGIN_KHACHHANG } from "@/store/action.type";
 import { useStore } from "vuex";
 
 export default {
-    name: "DangNhap",
+    name: "DangKy",
     setup() {
         const route = useRoute();
         const store = useStore();

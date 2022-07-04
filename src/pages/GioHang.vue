@@ -13,42 +13,31 @@
         </nav>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <h3 class="box-title">Giỏ hàng của bạn</h3>
-                <table class="shop_table cart-form">
-                    <thead>
-                        <tr>
-                            <th class="product-name">Tên sản phẩm</th>
-                            <th class="product-price">Giá bán</th>
-                            <th class="product-quantity">Số lượng</th>
-                            <th class="product-subtotal">Thành tiền</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <CartRow
-                            v-for="cart in carts"
-                            :key="cart.id"
-                            :cart="cart"
-                            @thaydoisoluong="thayDoiSoLuong"
-                        />
-                    </tbody>
-                </table>
+                <DanhSachGioHang :giohangs="giohangs" @thaydoisoluong="handleThayDoiSoLuong" />
                 <div class="d-flex justify-content-between mt-3">
-                    <RouterLink to="/" class="btn btn-danger btn-back">
-                      Trở về trang chủ
-                    </RouterLink>
-                    <button @click="removeAllCart" class="btn btn-default btn-back">Xóa tất cả</button>
+                    <RouterLink to="/" class="btn btn__back">Trở về trang chủ</RouterLink>
+                    <button
+                        @click="removeAllCart"
+                        class="btn btn__delete"
+                    >Xóa tất cả</button>
                 </div>
-                <div class="subtotal-line">
-                    <b class="stt-name">Tạm tính <span class="sub">({{ totalItem }} sp)</span></b>
-                    <span class="stt-price">{{ VNDFormat(totalPrice) }}</span>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-6"></div>
+            <div class="col-6 calc__price">
+                <h4>Tạm tính</h4>
+                <div class="calc__price--group">
+                    <div class="calc__price--label">Thành tiền</div>
+                    <div class="calc__price--value">{{ VNDFormat(tongtien) }}</div>
                 </div>
-                <p class="my-2">Chọn dịch vụ giao hàng</p>
-                <div class="subtotal-line">
-                    <b class="stt-name">Tiêu chuẩn</b>
-                    <span class="stt-price">0đ - {{ VNDFormat(50000) }}</span>
+                <hr>
+                <div class="calc__price--group">
+                    <div class="calc__price--label">Tổng tiền</div>
+                    <div class="calc__price--value">{{ VNDFormat(tongtien) }}</div>
                 </div>
-                <RouterLink :to="{ name: 'ThanhToan' }" class="btn btn-danger btn-block mt-4">
-                    Tiến hành đặt hàng
+                <RouterLink to="/thanh-toan" class="btn__checkout">
+                    Thanh toán
                 </RouterLink>
             </div>
         </div>
@@ -59,8 +48,8 @@
 import { computed } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
-import CartRow from "@/pages/GioHang/CartRow"
 import { VNDFormat } from "@/utils/helpers";
+import DanhSachGioHang from "@/pages/GioHang/DanhSachGioHang";
 
 import {
     REMOVE_ALL_CART_ITEM,
@@ -69,16 +58,17 @@ import {
 
 export default {
     name: "GioHang",
-    components: { CartRow },
+    components: {
+        DanhSachGioHang
+    },
     setup() {
         const store = useStore();
         const route = useRoute();
-        const carts = computed(() => store.getters.getAllCarts);
-        const totalItem = computed(() => store.getters.getTotalItems)
-        const totalPrice = computed(() => store.getters.getTotalPrice)
         const breadcrumbs = computed(() => route.meta.breadcrumbs)
+        const giohangs = computed(() => store.getters.giohangs);
+        const tongtien = computed(() => store.getters.tongtien)
 
-        const thayDoiSoLuong = (payload) => {
+        const handleThayDoiSoLuong = (payload) => {
             store.dispatch(UPDATE_CART_QTY, payload)
         }
         const removeAllCart = () => {
@@ -86,12 +76,11 @@ export default {
         }
 
         return {
-            carts,
+            giohangs,
             breadcrumbs,
+            tongtien,
             removeAllCart,
-            thayDoiSoLuong,
-            totalItem,
-            totalPrice,
+            handleThayDoiSoLuong,
             VNDFormat
         }
     }
@@ -99,13 +88,53 @@ export default {
 </script>
 
 <style scoped>
-    .prd-thumb figure img {
-        border-radius: 5px;
-    }
-    .btn-back {
-        padding: 10px 20px;
-        border-radius: 25px;
-        border: 1px solid transparent;
-        font-size: 17px;
-    }
+
+.prd-thumb figure img {
+    border-radius: 5px;
+}
+
+.btn__delete {
+    margin: 20px 0;
+    background-color: #f5f5f5;
+    color: #d9534f;
+    border-radius: 20px;
+}
+.btn__back {
+    border-radius: 20px;
+    margin: 20px 0;
+    background-color: transparent;
+    color: #d9534f;
+    border: 1px solid #d9534f;
+    transition: all .3s linear;
+}
+.btn__back:hover {
+    background-color: #d9534f;
+    color: #fff;
+}
+.calc__price {
+    background-color: #f5f5f5;
+    padding: 10px 20px;
+    color: #333;
+    font-family: 'Roboto Slab', serif;
+}
+.calc__price h4 {
+    margin-bottom: 20px;
+    font-size: 25px;
+    text-align: right;
+}
+.calc__price--group {
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    margin: 10px 0;
+    text-transform: uppercase;
+}
+.btn__checkout {
+    display: block;
+    background-color:#d9534f;
+    color: #fff;
+    padding: 10px;
+    margin-top: 30px;
+    text-align: center;
+}
 </style>
