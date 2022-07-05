@@ -1,6 +1,6 @@
 import { VuePicker, VuePickerOption } from '@invisiburu/vue-picker'
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
-import StarRating from "vue-star-rating"
+import StarRating from "vue-star-rating";
 
 export const registerComponent = (app) => {
     app.component('VPicker', VuePicker);

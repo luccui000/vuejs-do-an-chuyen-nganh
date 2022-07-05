@@ -115,7 +115,7 @@ export default {
     background-color: #f5f5f5;
     padding: 10px 20px;
     color: #333;
-    font-family: 'Roboto Slab', serif;
+    font-family: 'Nunito', sans-serif;
 }
 .calc__price h4 {
     margin-bottom: 20px;

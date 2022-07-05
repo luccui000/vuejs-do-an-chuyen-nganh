@@ -155,6 +155,11 @@ const routes = [
         }
     },
     {
+        path: '/dat-hang-thanh-cong',
+        name: 'DatHangThanhCong',
+        component: () => import('@/pages/DatHangThanhCong')
+    },
+    {
         path: '/theo-doi-don-hang',
         name: 'TheoDoiDonHang',
         component: () => import('@/pages/TheoDoiDonHang'),

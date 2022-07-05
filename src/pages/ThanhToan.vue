@@ -5,33 +5,37 @@
                 <LBreadcrumb :crumbs="breadcrumbs" />
             </div>
         </div>
-        <form class="row" @submit.prevent="handleSubmit">
+        <Form class="row" @submit="submitForm" :validation-schema="schema">
             <div class="col-8">
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
-                            <label for="">Họ</label>
-                            <input v-model="form.ho" placeholder="Họ" class="form-control" type="text">
+                            <label for="ho">Họ <span class="text-danger">*</span></label>
+                            <Field id="ho" name="ho" type="text" class="form-control" />
+                            <ErrorMessage name="ho" class="text-sm text-danger" />
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="form-group">
-                            <label for="">Tên</label>
-                            <input v-model="form.ten" placeholder="Tên" class="form-control" type="text">
+                            <label for="ten">Tên <span class="text-danger">*</span></label>
+                            <Field id="ten" name="ten" type="text" class="form-control" />
+                            <ErrorMessage name="ten" class="text-sm text-danger" />
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
-                            <label for="">Số điện thoại</label>
-                            <input v-model="form.so_dien_thoai" type="text" class="form-control" placeholder="Nhập số điện thoại">
+                            <label for="">Số điện thoại <span class="text-danger">*</span></label>
+                            <Field id="so_dien_thoai" name="so_dien_thoai" type="text" class="form-control" placeholder="Nhập số điện thoại" />
+                            <ErrorMessage name="so_dien_thoai" class="text-sm text-danger" />
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="form-group">
-                            <label for="">Email</label>
-                            <input v-model="form.email" type="text" class="form-control" placeholder="Nhập email">
+                            <label for="email">Email </label>
+                            <Field id="email" name="email" type="text" class="form-control" placeholder="Nhập số điện thoại" />
+                            <ErrorMessage name="email" class="text-sm text-danger" />
                         </div>
                     </div>
                 </div>
@@ -54,11 +58,7 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label for="">Quận/ huyện</label>
-                            <select
-                                v-model="form.ma_huyen"
-                                class="form-control"
-                                @change="handleHuyenChange($event.target.value)"
-                            >
+                            <select v-model="form.ma_huyen" class="form-control" @change="handleHuyenChange">
                                 <option
                                     v-for="huyen in huyens"
                                     :key="huyen.id"
@@ -88,14 +88,15 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label for="">Địa chỉ chi tiết</label>
-                            <input v-model="form.dia_chi_chi_tiet" type="text" class="form-control" placeholder="Địa chỉ chi tiết">
+                            <Field id="dia_chi" name="dia_chi" type="text" class="form-control" placeholder="Nhập vào địa chỉ chi tiết" />
+                            <ErrorMessage name="dia_chi" class="text-sm text-danger" />
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12">
                         <label for="">Ghi chú</label>
-                        <textarea  class="form-control" placeholder="Nhập vào ghi chú"></textarea>
+                        <textarea class="form-control" placeholder="Nhập vào ghi chú"></textarea>
                     </div>
                 </div>
             </div>
@@ -104,7 +105,7 @@
                     <h4>Giỏ hàng</h4>
                     <div class="calc__price--group">
                         <div class="calc__price--label">Thành tiền</div>
-                        <div class="calc__price--value">{{ VNDFormat(tongtien) }}</div>
+                        <div class="calc__price--value">{{ VNDFormat(form.thanh_tien) }}</div>
                     </div>
                     <div class="calc__price--group">
                         <div class="calc__price--label">Phí giao hàng</div>
@@ -113,33 +114,56 @@
                     <hr>
                     <div class="calc__price--group">
                         <div class="calc__price--label">Tổng tiền</div>
-                        <div class="calc__price--value">{{ VNDFormat(tongtien + form.phi_giao_hang) }}</div>
+                        <div class="calc__price--value">{{ VNDFormat(form.tong_tien) }}</div>
                     </div>
-                    <RouterLink to="/thanh-toan" class="btn__checkout">
+                    <h5>Phương thức thanh toán</h5>
+                    <div class="form-check">
+                        <input v-model="form.phuong_thuc_thanh_toan" value="0" class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"  checked>
+                        <label class="form-check-label cursor-pointer" for="exampleRadios1">
+                            Thanh toán khi nhận hàng
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input v-model="form.phuong_thuc_thanh_toan" value="1" class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2">
+                        <label class="form-check-label cursor-pointer" for="exampleRadios2">
+                            Thẻ tín dụng
+                        </label>
+                    </div>
+                    <button class="btn__checkout cursor-pointer">
                         Thanh toán
-                    </RouterLink>
-
+                    </button>
                 </div>
             </div>
-        </form>
+        </Form>
+        <button @click="testSubmitForm">testSubmitForm</button>
     </div>
 </template>
 
 <script>
-import { computed, reactive } from "vue";
-import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
+import { computed, reactive, watch } from "vue";
+import { useRoute } from "vue-router"
+import { useStore } from "vuex"
+import { Field, Form, ErrorMessage } from "vee-validate"
+import * as Yup from "yup";
 import {
     FETCH_ALL_TINHS,
     FETCH_HUYEN_BY_MA_TINH,
     SET_MA_TINH,
-    FETCH_XA_BY_MA_HUYEN, RESET_XA_DATA, CALC_PHI_GIAO_HANG
+    FETCH_XA_BY_MA_HUYEN,
+    RESET_XA_DATA,
+    CALC_PHI_GIAO_HANG,
+    // CREATE_NEW_ORDER,
+    MAKE_ORDER_DETAIL, CREATE_NEW_ORDER
 } from "@/store/action.type";
 import { VNDFormat } from "@/utils/helpers";
 
 export default {
     name: "ThanhToan",
-    components: { },
+    components: {
+        Form,
+        Field,
+        ErrorMessage
+    },
     setup() {
         const route = useRoute();
         const store = useStore();
@@ -147,30 +171,50 @@ export default {
         store.dispatch(FETCH_ALL_TINHS);
 
         const form = reactive({
-            ho: '',
-            ten: '',
-            so_dien_thoai: '',
-            email: '',
-            ma_huyen: '',
             ma_tinh: '',
+            ma_huyen: '',
             ma_xa: '',
-            dia_chi_chi_tiet: '',
-            phi_giao_hang: 0
+            thanh_tien: 0,
+            phi_giao_hang: 0,
+            tong_tien: 0,
+            phuong_thuc_thanh_toan: 1
         })
         const breadcrumbs = computed(() => route.meta.breadcrumbs);
         const tinhs = computed(() => store.state.address.tinhs);
         const huyens = computed(() => store.state.address.huyens)
         const xas = computed(() => store.state.address.xas)
         const thongtinshipping = computed(() => store.state.shipping.thongtinshipping);
-        const tongtien = computed(() => store.getters.tongtien)
+        form.thanh_tien = computed(() => store.getters.tongtien);
+
+        watch(() => form.phi_giao_hang, () => {
+            form.tong_tien = form.thanh_tien + form.phi_giao_hang;
+        });
+
+        const schema = Yup.object().shape({
+            ho: Yup.string()
+                .min(2, "Họ ít nhất 2 ký")
+                .required("Vui lòng nhập vào họ của bạn"),
+            ten: Yup.string()
+                .min(3, "Tên ít nhất 3 ký tự")
+                .required("Vui lòng nhập vào tên của bạn"),
+            so_dien_thoai:
+                Yup.string()
+                    .min(10, "Số điện thoại không hợp lệ")
+                    .max(11, "Số điện thoại không hợp lệ")
+                    .required("Vui lòng nhập vào số điện thoại"),
+            email: Yup.string(),
+            dia_chi: Yup.string()
+                .min(5, "Địa chỉ ít nhất 5 ký tự")
+                .required("Vui lòng nhập vào chi tiết địa chỉ để shipper dễ dàng giao hàng"),
+        });
 
         const handleTinhChange = (id) => {
             store.commit(SET_MA_TINH, id)
             store.dispatch(FETCH_HUYEN_BY_MA_TINH, id)
             store.commit(RESET_XA_DATA)
         }
-        const handleHuyenChange = (maHuyen) => {
-            store.dispatch(FETCH_XA_BY_MA_HUYEN, maHuyen)
+        const handleHuyenChange = (event) => {
+            store.dispatch(FETCH_XA_BY_MA_HUYEN, event.target.value)
         }
         const handleXaChange = () => {
             const payload = {
@@ -181,9 +225,14 @@ export default {
             store.dispatch(CALC_PHI_GIAO_HANG, payload);
             form.phi_giao_hang = thongtinshipping.value.total;
         }
-        const handleSubmit = () => {
-            console.log(form)
+        const submitForm = values => {
+            const payload = Object.assign(values, form)
+            store.dispatch(CREATE_NEW_ORDER, payload)
         }
+        const testSubmitForm = () => {
+            store.dispatch(MAKE_ORDER_DETAIL, 4)
+        }
+
 
         return {
             breadcrumbs,
@@ -191,11 +240,12 @@ export default {
             huyens,
             xas,
             form,
-            tongtien,
+            schema,
             handleTinhChange,
             handleHuyenChange,
             handleXaChange,
-            handleSubmit,
+            submitForm,
+            testSubmitForm,
             VNDFormat,
         }
     }
@@ -223,12 +273,16 @@ select.form-control {
     background-color: #f5f5f5;
     padding: 10px 20px;
     color: #333;
-    font-family: 'Roboto Slab', serif;
+    font-family: 'Nunito', sans-serif;
 }
 .checkout__container h4 {
     margin-bottom: 20px;
     font-size: 20px;
     text-align: right;
+}
+.checkout__container h5 {
+    font-size: 20px;
+    margin: 20px 0;
 }
 .calc__price--group {
     display: flex;
@@ -244,5 +298,10 @@ select.form-control {
     padding: 10px;
     margin-top: 30px;
     text-align: center;
+    font-weight: bold;
+}
+.text-sm {
+    font-size: 13px;
+    font-weight: lighter;
 }
 </style>

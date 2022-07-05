@@ -1,9 +1,6 @@
 .minicart-contain .link-to span {
     cursor: pointer;
 }
-a {
-    text-decoration: none;
-}
 .carousel__prev,
 .carousel__next {
     background-color: #fff;

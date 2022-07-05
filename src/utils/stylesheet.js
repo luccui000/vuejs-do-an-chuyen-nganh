@@ -1,11 +1,10 @@
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue-3/dist/bootstrap-vue-3.css";
 import "vue3-carousel/dist/carousel.css";
 import '@invisiburu/vue-picker/dist/vue-picker.min.css'
 import "@/assets/css/animate.min.css";
-import "@/assets/css/bootstrap.min.css";
+import 'bootstrap/dist/css/bootstrap.css'
 import "@/assets/css/font-awesome.min.css";
-import "@/assets/css/nice-select.css";
+import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
+import "@/assets/css/bootstrap.min.css";
 import "@/assets/css/slick.min.css";
 import "@/assets/css/style.css";
 import "@/assets/css/main-color.css";
