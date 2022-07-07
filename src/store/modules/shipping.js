@@ -8,7 +8,6 @@ const state = {
 }
 const getters = {
     thongtinshipping: state => state.thongtinshipping,
-    phigiaohang: state => state.thongtinshipping.total
 }
 
 const actions = {

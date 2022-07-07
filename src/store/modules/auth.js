@@ -7,7 +7,8 @@ const state = {
 }
 
 const getters = {
-    authenticated: state => state.khachhang && state.token
+    authenticated: state => state.khachhang && state.token,
+    hotenkh: state => state.khachhang.ho_khach_hang + " " + state.khachhang.ten_khach_hang,
 }
 const actions = {
     async [LOGIN_KHACHHANG]({ dispatch }, payload) {
