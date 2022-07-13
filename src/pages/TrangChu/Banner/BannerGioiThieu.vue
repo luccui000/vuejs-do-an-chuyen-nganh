@@ -9,12 +9,12 @@
                         <span class="second-line">Nói không với chất biến đổi</span>
                         <p class="third-line">Với mong muốn mang tới cho khách hàng sự thuận tiện nhất và dẫn thay đổi thói quen đi chợ truyền thống cũng như đa số khách hàng đều được sử dụng các sản phẩm hoa quả sạch chất lượng cao nhất.</p>
                         <p class="buttons">
-                            <RouterLink to="/san-pham" class="btn btn-bold">
+                            <router-link to="/san-pham/tat-ca" class="btn btn-bold">
                                 Xem thêm
-                            </RouterLink>
-                            <RouterLink to="/san-pham" class="btn btn-thin">
+                            </router-link>
+                            <router-link to="/san-pham/tat-ca" class="btn btn-thin">
                                 Xem tất cả sản phẩm
-                            </RouterLink>
+                            </router-link>
                         </p>
                     </div>
                 </div>

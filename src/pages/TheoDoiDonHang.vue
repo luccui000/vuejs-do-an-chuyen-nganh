@@ -32,9 +32,9 @@
                             <td>{{ donhang.ma_don_hang }}</td>
                             <td>23/01/2022</td>
                             <td>
-                                <span class="status status__danger">Đang giao hàng</span>
+                                <span class="status status__danger">{{ donhang.trang_thai }}</span>
                             </td>
-                            <td>{{ VNDFormat(12121) }}</td>
+                            <td>{{ VNDFormat(donhang.tong_tien) }}</td>
                         </tr>
                     </tbody>
                 </table>

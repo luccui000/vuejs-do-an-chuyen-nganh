@@ -12,14 +12,14 @@
         <tbody>
             <tr v-for="giohang in giohangs" :key="giohang.id" class="shoping_cart--item">
                 <td class="product-thumbnail" data-title="Product Name">
-                    <RouterLink :to="giohang.slug" class="prd-thumb">
+                    <router-link :to="giohang.slug" class="prd-thumb">
                         <figure>
                             <img class="shoping__cart--img" width="113" height="113" :src="giohang.hinh_anh" alt="shipping cart">
                         </figure>
-                    </RouterLink>
-                    <RouterLink :to="giohang.slug" class="prd-name">
+                    </router-link>
+                    <router-link :to="giohang.slug" class="prd-name">
                         {{ giohang.ten_sp }}
-                    </RouterLink>
+                    </router-link>
                 </td>
                 <td class="product-price" data-title="Price">
                     <div class="price price-contain">

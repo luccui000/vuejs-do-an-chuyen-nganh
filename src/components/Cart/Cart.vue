@@ -15,8 +15,8 @@
                         <CartItem :cart="cart" />
                     </ul>
                     <p class="btn-control">
-                        <RouterLink to="/gio-hang" class="btn view-cart">Xem giỏ hàng</RouterLink>
-                        <a href="/gio-hang" class="btn">Thanh toán</a>
+                        <router-link to="/gio-hang" class="btn view-cart">Xem giỏ hàng</router-link>
+                        <router-link href="/thanh-toan" class="btn">Thanh toán</router-link>
                     </p>
                 </div>
             </div>

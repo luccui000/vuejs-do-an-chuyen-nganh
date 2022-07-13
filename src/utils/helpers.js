@@ -39,3 +39,13 @@ export function normalizeSlug(sanphams) {
         }
     })
 }
+
+export function randomOrderId(strLength, charSet) {
+    let result = [];
+    strLength = strLength || 8;
+    charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    while (strLength--) {
+        result.push(charSet.charAt(Math.floor(Math.random() * charSet.length)));
+    }
+    return result.join('');
+}

@@ -1,24 +1,34 @@
 import {
     CREATE_NEW_ORDER,
-    FETCH_DON_HANG_THEO_MA,
-    MAKE_ORDER,
-    MAKE_ORDER_DETAIL,
+    CREATE_NEW_ORDER_WITH_PAYMENT, DAT_HANG_THANH_CONG, DAT_HANG_THAT_BAI,
+    FETCH_DON_HANG_THEO_MA, LUU_THONG_TIN_DAT_HANG, LUU_THONG_TIN_GIO_HANG,
+    MAKE_ORDER_DETAIL, MAKE_PAYMENT, REMOVE_ALL_CART_ITEM,
+    SAVE_LOCAL_ORDER_DATA,
     // REMOVE_ALL_CART_ITEM,
-    SET_KHACHHANG_ID
+    SET_KHACHHANG_ID, SET_MA_DON_HANG, THEO_DOI_DON_HANG
 } from "@/store/action.type";
 import apis from "@/services/api.service";
-import { getToken } from "@/services/jwt.service";
+import { randomOrderId } from "@/utils/helpers";
+import router from "@/routes";
+
+const MA_DON_HANG = 'ma_don_hang'
 
 const state = {
     donhangs: [],
     donhang: null,
     khachhangId: null,
     chitiet_donhang: [],
-    dathangthanhcong: false
+    dathangthanhcong: false,
+    madonhang: null,
+    donvuadat: null,
+    error: false,
+    error_message: null,
+    dondadats: []
 }
 const getters = {
     donhangs: state => state.donhangs,
-    dathangthanhcong: state => state.dathangthanhcong
+    dathangthanhcong: state => state.dathangthanhcong,
+    donVuaDat: state => state.donvuadat
 }
 const actions = {
     [FETCH_DON_HANG_THEO_MA]({ commit}, ma) {
@@ -30,41 +40,46 @@ const actions = {
                 }).catch(error => reject(error))
         })
     },
-    [CREATE_NEW_ORDER]({ state, dispatch }, payload) {
-        state.dathangthanhcong = false;
-        return new Promise((resolve, reject) => {
-            const token = getToken();
-            if(token) {
-                dispatch('attempt', token)
-                // const khachhang = store.state.auth.khachhang;
-            } else {
-                apis.post('/khach-hang/dang-ky', {
-                    ho_khach_hang: payload.ho,
-                    ten_khach_hang: payload.ten,
-                    so_dien_thoai: payload.so_dien_thoai,
-                }).then(response => {
-                    console.log("khachhang:::", response.data)
-                    dispatch(MAKE_ORDER, {
-                        ...payload,
-                        khachhang_id: response.data.id
-                    })
-                    resolve(response.data)
-                }).catch(error => reject(error))
+    [CREATE_NEW_ORDER_WITH_PAYMENT]({ dispatch }, donHang) {
+        localStorage.setItem(SAVE_LOCAL_ORDER_DATA, JSON.stringify(donHang))
+        const ma_don_hang = randomOrderId();
+        const payment = {
+            ma_don_hang: ma_don_hang,
+            tong_tien: donHang.tong_tien
+        }
+        dispatch(MAKE_PAYMENT, payment)
+    },
+    async[THEO_DOI_DON_HANG]({ commit }, payload) {
+        try {
+            const response = await apis.post('/don-hang/theo-doi-don-hang', {
+                khachhang_id: payload
+            })
+            console.log(response.data)
+            commit(THEO_DOI_DON_HANG, response.data)
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    async [CREATE_NEW_ORDER]({ commit, dispatch }, { thongtin, giohang, thanhtoan }) {
+        try {
+            const response = await apis.post('/don-hang', thongtin)
+            dispatch(MAKE_ORDER_DETAIL, {
+                orderId: response.data.id,
+                giohang
+            })
+            if(thanhtoan) {
+                localStorage.removeItem(LUU_THONG_TIN_DAT_HANG)
+                localStorage.removeItem(LUU_THONG_TIN_GIO_HANG)
             }
-        })
+            commit(REMOVE_ALL_CART_ITEM)
+            commit(DAT_HANG_THANH_CONG, response.data)
+            router.push('/dat-hang/thanh-cong')
+        } catch (error) {
+            commit(DAT_HANG_THAT_BAI, error)
+        }
     },
-    [MAKE_ORDER]({ dispatch }, orders) {
-        return new Promise((resolve, reject) => {
-            apis.post('/don-hang', orders)
-                .then(response => {
-                    console.log("donhang:::", response.data)
-                    dispatch(MAKE_ORDER_DETAIL, response.data.id)
-                    resolve(response.data)
-                }).catch(error => reject(error))
-        })
-    },
-    [MAKE_ORDER_DETAIL]({ getters }, orderId) {
-        const giohangs = getters.giohangs.map(gh => {
+    async [MAKE_ORDER_DETAIL](_, { orderId, giohang }) {
+        const giohangs = giohang.map(gh => {
             return apis.post('/chi-tiet-don-hang', {
                 sanpham_id: gh.id,
                 donhang_id: orderId,
@@ -73,11 +88,16 @@ const actions = {
                 thanh_tien: gh.gia_khuyen_mai * gh.qty
             })
         })
-        Promise.all(giohangs).then(response => {
-            console.log(response)
-            // commit(REMOVE_ALL_CART_ITEM)
-        })
-    }
+        return await Promise.all(giohangs)
+    },
+    async [MAKE_PAYMENT]({ commit }, payment) {
+        try {
+            const response = await apis.post('/thanh-toan/chuyen-huong', payment);
+            window.location.href = response.data;
+        } catch (error) {
+            commit(DAT_HANG_THAT_BAI, error)
+        }
+    },
 }
 const mutations = {
     [FETCH_DON_HANG_THEO_MA](state, donhangs) {
@@ -86,9 +106,24 @@ const mutations = {
     [SET_KHACHHANG_ID](state, khachhangId){
         state.khachhangId = khachhangId;
     },
-    [MAKE_ORDER](state, donhang) {
+    [CREATE_NEW_ORDER](state, donhang) {
         state.donhang = donhang;
     },
+    [SET_MA_DON_HANG](state, madonhang) {
+        localStorage.setItem(MA_DON_HANG, madonhang);
+        state.madonhang = madonhang
+    },
+    [DAT_HANG_THANH_CONG](state, donhang) {
+        state.dathangthanhcong = true;
+        state.donvuadat = donhang
+    },
+    [DAT_HANG_THAT_BAI](state, error) {
+        state.error = true;
+        state.error_message = error
+    },
+    [THEO_DOI_DON_HANG](state, donhangs) {
+        state.dondadats = donhangs
+    }
 }
 
 export default {

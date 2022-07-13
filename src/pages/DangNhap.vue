@@ -27,6 +27,9 @@
                                 </span>
                             </div>
                         </div>
+                        <span class="text-sm text-danger" v-show="isLoginError">
+                            {{ loginErrorMessage }}
+                        </span>
                         <p class="form-row wrap-btn">
                             <button class="btn btn-submit btn-bold" type="submit">Đăng nhập</button>
                             <a href="#" class="link-to-help">Quên mật khẩu</a>
@@ -72,6 +75,10 @@ export default {
         const breadcrumbs = computed(() => route.meta.breadcrumbs);
         const inFocusEmail = ref(false);
         const inFocusPassword = ref(false);
+        const isLoginError = computed(() => store.state.auth.error);
+        const loginErrorMessage = computed(() => store.state.auth.error_message);
+        console.log(isLoginError)
+        console.log(loginErrorMessage)
 
         const formData = reactive({
             email: 'minhluc@gmail.com',
@@ -110,7 +117,9 @@ export default {
             breadcrumbs,
             handleSubmit,
             formData,
-            v$
+            v$,
+            isLoginError,
+            loginErrorMessage
         }
     }
 }

@@ -21,6 +21,7 @@
                         <RouterLink :to="{ name: 'ThongTinCaNhan' }">
                             {{ khachhang.ten_khach_hang }}
                         </RouterLink>
+
                     </li>
                     <li v-else>
                         <RouterLink to="/dang-nhap">

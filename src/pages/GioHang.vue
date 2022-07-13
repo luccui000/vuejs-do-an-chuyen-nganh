@@ -115,11 +115,11 @@ export default {
     color: #d9534f;
 }
 .btn__checkout {
-    display: block;
     background-color: #d9534f;
     text-align: center;
     color: #fff;
     font-size: 17px;
+    float: right;
 }
 .btn__checkout:hover {
     color: #fff;

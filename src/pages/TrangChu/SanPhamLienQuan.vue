@@ -1,7 +1,7 @@
 <template>
     <div class="biolife-title-box">
-        <span class="subtitle">Danh mục nổi bật nhất</span>
-        <h3 class="main-title">Sản phẩm đề xuất cho bạn</h3>
+        <span class="subtitle">Top sản phẩm được mua nhiều nhất</span>
+        <h3 class="main-title">Chúng tôi đề xuất cho bạn</h3>
     </div>
     <div class="row">
         <div v-for="sanpham in sanphams" :key="sanpham.id" class="col-3">

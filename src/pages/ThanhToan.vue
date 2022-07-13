@@ -5,20 +5,20 @@
                 <LBreadcrumb :crumbs="breadcrumbs" />
             </div>
         </div>
-        <Form class="row" @submit="submitForm" :validation-schema="schema">
+        <Form class="row mb-4" @submit="submitForm" :validation-schema="schema">
             <div class="col-8">
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
                             <label for="ho">Họ <span class="text-danger">*</span></label>
-                            <field id="ho" name="ho" type="text" class="form-control" />
+                            <field id="ho" name="ho" type="text" class="form-control" placeholder="Nhập vào họ" />
                             <error-message name="ho" class="text-sm text-danger" />
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="form-group">
                             <label for="ten">Tên <span class="text-danger">*</span></label>
-                            <field id="ten" name="ten" type="text" class="form-control" />
+                            <field id="ten" name="ten" type="text" class="form-control" placeholder="Nhập vào tên" />
                             <error-message name="ten" class="text-sm text-danger" />
                         </div>
                     </div>
@@ -157,14 +157,15 @@ import {
     FETCH_ALL_TINHS,
     FETCH_HUYEN_BY_MA_TINH,
     FETCH_XA_BY_MA_HUYEN,
-    CREATE_NEW_ORDER,
     SET_MA_TINH,
     SET_MA_HUYEN,
     SET_MA_XA,
     RESET_XA_DATA,
-    PHI_GIAO_HANG
+    PHI_GIAO_HANG,
+    CREATE_NEW_ORDER,
+    MAKE_PAYMENT, SAVE_LOCAL_ORDER_DATA, LUU_THONG_TIN_DAT_HANG, LUU_THONG_TIN_GIO_HANG
 } from "@/store/action.type";
-import { VNDFormat } from "@/utils/helpers";
+import { randomOrderId, VNDFormat } from "@/utils/helpers";
 
 export default {
     name: "ThanhToan",
@@ -213,7 +214,6 @@ export default {
             store.commit(SET_MA_XA, maXa)
             store.dispatch(PHI_GIAO_HANG)
         })
-
         const schema = Yup.object().shape({
             ho: Yup.string()
                 .min(2, "Họ ít nhất 2 ký")
@@ -233,8 +233,27 @@ export default {
         });
 
         const submitForm = values => {
-            const payload = Object.assign(values, form)
-            store.dispatch(CREATE_NEW_ORDER, payload)
+            const thongtin = Object.assign(Object.assign(values, form), diachi);
+            if(thongtin.ma_xa !== null && thongtin.ma_huyen !== null && thongtin.ma_tinh !== null)  {
+                const giohang = computed(() => store.getters.giohangs)
+
+                if(thongtin.phuong_thuc_thanh_toan === "1") {
+                    localStorage.setItem(LUU_THONG_TIN_DAT_HANG, JSON.stringify(thongtin));
+                    localStorage.setItem(LUU_THONG_TIN_GIO_HANG, JSON.stringify(giohang.value));
+
+                    store.dispatch(MAKE_PAYMENT, {
+                        ma_don_hang: randomOrderId(),
+                        tong_tien: form.tong_tien
+                    })
+                } else {
+                    store.dispatch(CREATE_NEW_ORDER, {
+                        thongtin,
+                        giohang
+                    })
+                }
+            } else {
+                alert("Vui lòng chọn thông tin xã")
+            }
         }
 
         return {
@@ -259,9 +278,13 @@ input.form-control {
     box-shadow: none;
     transition: all .3s linear;
 }
+input.form-control:focus {
+    border-color: #d27f7c;
+}
 textarea.form-control,
 select.form-control{
     border-radius: 0;
+    border: 1px solid #dddddd;
 }
 .form-control:focus {
     outline: none;

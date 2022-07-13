@@ -1,10 +1,10 @@
 <template>
-    <div class="advance-product-box">
+    <div class="advance-product-box right">
         <div class="biolife-title-box bold-style biolife-title-box__bold-style">
             <h3 class="title my-4">Được mua nhiều nhất</h3>
         </div>
         <div class="row">
-            <ul class="products biolife-carousel eq-height-contain nav-center-03 row-space-29px">
+            <ul class="right products biolife-carousel eq-height-contain nav-center-03 row-space-29px">
                 <Carousel :items-to-show="2" >
                     <Slide v-for="(sanphams, idx) in sanphamMuaNhieu" :key="idx">
                         <div class="row-item">
@@ -67,5 +67,9 @@ export default {
 <style scoped>
 .advance-product-box {
     padding-left: 20px;
+}
+.right.carousel__prev {
+    background-color: #eaeaea !important;
+    transition: background-color .2s linear;
 }
 </style>

@@ -1,25 +1,31 @@
 <template>
-    <div class="container">
-        <h3>Đặt hàng thành công</h3>
+    <div class="container text-center">
+        <h4 class="">Đặt hàng thành công </h4>
+        <h3>Mã đơn hàng: #{{ donVuaDat.ma_don_hang }}</h3>
+        <h4 class="mt-1">Họ tên: {{ donVuaDat.ho + " " + donVuaDat.ten }}</h4>
+        <h4 class="">Tồng tiền: {{ donVuaDat.tong_tien }}</h4>
+        <h4 class="">Ngày đặt: {{ formatDate(donVuaDat.created_at) }}</h4>
     </div>
 </template>
 
 <script>
-import { computed } from "vue";
+
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { computed } from "vue";
 
 export default {
     name: "DatHangThanhCong",
     setup() {
         const store = useStore();
-        const router = useRouter();
+        const donVuaDat = computed(() => store.getters.donVuaDat)
 
-        const DatHangThanhCong = computed(() => store.getters.dathangthanhcong);
-        if(!DatHangThanhCong.value)
-            router.push("/")
+        const formatDate = (dateString) => {
+            const date = new Date(dateString);
+            return `${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`
+        }
         return {
-            DatHangThanhCong
+            donVuaDat,
+            formatDate
         }
     }
 };

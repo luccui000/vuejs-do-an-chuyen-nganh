@@ -50,8 +50,8 @@
                         </li>
                     </ul>
                     <p class="btn-control">
-                        <RouterLink to="/gio-hang" class="btn view-cart">Xem giỏ hàng</RouterLink>
-                        <RouterLink to="/gio-hang" class="btn">Thanh toán</RouterLink>
+                        <router-link to="/gio-hang" class="btn view-cart">Xem giỏ hàng</router-link>
+                        <router-link to="/thanh-toan" class="btn">Thanh toán</router-link>
                     </p>
                 </div>
             </div>

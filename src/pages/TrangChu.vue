@@ -57,11 +57,31 @@
     position: absolute;
     top: -30px !important;
     left: 330px !important;
+    background-color: #eaeaea;
+    transition: background-color .2s linear;
 }
 .left .carousel__next {
     position: absolute;
     top: -30px !important;
     left: 335px !important;
+    background-color: #eaeaea;
+    transition: background-color .2s linear;
+}
+.left .carousel__prev:hover,
+.left .carousel__next:hover {
+    background-color: #ccc;
+}
+.right .carousel__prev {
+    background-color: #eaeaea;
+    transition: background-color .2s linear;
+}
+.right .carousel__next {
+    background-color: #eaeaea;
+    transition: background-color .2s linear;
+}
+.right .carousel__prev:hover,
+.right .carousel__next:hover{
+    background-color: #ccc;
 }
 </style>
 

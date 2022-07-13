@@ -1,11 +1,17 @@
 import { endpoint } from "@/apis"
 import apis from '@/services/api.service';
 import {
-    FETCH_ALL_SANPHAMS, FETCH_SANPHAMS_FILTER,
+    FETCH_ALL_SANPHAMS,
+    FETCH_SANPHAMS_FILTER,
     FETCH_SANPHAMS_LIENQUAN,
     FETCH_SANPHAMS_MUANHIEU,
     FETCH_SANPHAMS_UUDAI,
-    FETCH_SANPHAMS_BY_SLUG, SEARCH_SANPHAMS, ORDER_SAN_PHAM_THEO_GIA, GET_SAN_PHAM_FROM_TO
+    FETCH_SANPHAMS_BY_SLUG,
+    SEARCH_SANPHAMS,
+    ORDER_SAN_PHAM_THEO_GIA,
+    GET_SAN_PHAM_FROM_TO,
+    FETCH_ALL_NHACUNGCAP,
+    GET_SAN_PHAM_FROM_NHACUNGCAP, RESET_FILTER, FETCH_ALL_DANHMUC, GET_SAN_PHAM_FROM_DANHMUC
 } from "@/store/action.type";
 import {
     chunkArray,
@@ -21,6 +27,8 @@ const states = {
     sanpham_muanhieu: [],
     sanpham_uudai: [],
     sanpham_timkiem: [],
+    nhacungcaps: [],
+    danhmucs: []
 };
 
 const getters = {
@@ -64,6 +72,9 @@ const getters = {
                 }
             });
         }
+    },
+    getTonKho(state) {
+        return state.sanpham && state.sanpham.tonkhos[0].so_luong;
     }
 }
 const actions = {
@@ -96,6 +107,20 @@ const actions = {
         commit(FETCH_ALL_SANPHAMS, sanphams)
         commit(GET_SAN_PHAM_FROM_TO, payload)
     },
+    async [GET_SAN_PHAM_FROM_NHACUNGCAP]({ commit, dispatch }, payload) {
+        const sanphams = await dispatch("getAllSanPham");
+        commit(FETCH_ALL_SANPHAMS, sanphams)
+        commit(GET_SAN_PHAM_FROM_NHACUNGCAP, payload)
+    },
+    async [GET_SAN_PHAM_FROM_DANHMUC]({ commit, dispatch }, payload) {
+        const sanphams = await dispatch("getAllSanPham");
+        commit(FETCH_ALL_SANPHAMS, sanphams)
+        commit(GET_SAN_PHAM_FROM_DANHMUC, payload)
+    },
+    async [RESET_FILTER]({ commit, dispatch }) {
+        const sanphams = await dispatch("getAllSanPham");
+        commit(FETCH_ALL_SANPHAMS, sanphams)
+    },
     getAllSanPham() {
         return new Promise((resolve, reject) => {
             apis.get('/san-pham/tat-ca')
@@ -103,6 +128,22 @@ const actions = {
                     resolve(response.data)
                 }).catch(error => reject(error))
         })
+    },
+    async [FETCH_ALL_NHACUNGCAP]({ commit }) {
+        try {
+            const response = await apis('/nha-cung-cap')
+            commit(FETCH_ALL_NHACUNGCAP, response.data)
+        } catch (error) {
+            console.error('FETCH_ALL_NHACUNGCAP', error)
+        }
+    },
+    async [FETCH_ALL_DANHMUC]({ commit }) {
+        try {
+            const response = await apis.get('/danh-muc')
+            commit(FETCH_ALL_DANHMUC, response.data)
+        } catch (error) {
+            console.error(error)
+        }
     }
 }
 const mutations = {
@@ -138,6 +179,18 @@ const mutations = {
     },
     [GET_SAN_PHAM_FROM_TO](state, { from, to}) {
         state.sanphams = state.sanphams.filter(sp => sp.gia_khuyen_mai > from && sp.gia_khuyen_mai <= to);
+    },
+    [FETCH_ALL_NHACUNGCAP](state, ncc) {
+        state.nhacungcaps = ncc;
+    },
+    [GET_SAN_PHAM_FROM_NHACUNGCAP](state, nhacungcap_id) {
+        state.sanphams = state.sanphams.filter(sp => sp.nhacungcap_id === nhacungcap_id);
+    },
+    [FETCH_ALL_DANHMUC](state, dm) {
+        state.danhmucs = dm;
+    },
+    [GET_SAN_PHAM_FROM_DANHMUC](state, danhmuc_id) {
+        state.sanphams = state.sanphams.filter(sp => sp.danhmuc_id === danhmuc_id);
     }
 }
 export default {

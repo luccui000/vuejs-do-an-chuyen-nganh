@@ -12,19 +12,19 @@
             <div class="biolife-countdown" data-datetime="2022/07/29 10:00:00">
                 <span class="days">
                     <span class="number">00</span>
-                    <span class="text">days</span>
+                    <span class="text">Ngày</span>
                 </span>
                 <span class="hours">
                     <span class="number">00</span>
-                    <span class="text">Hours</span>
+                    <span class="text">Giờ</span>
                 </span>
                 <span class="mins">
                     <span class="number">00</span>
-                    <span class="text">Mins</span>
+                    <span class="text">Phút</span>
                 </span>
                 <span class="secs">
                     <span class="number">00</span>
-                    <span class="text">Secs</span>
+                    <span class="text">Giây</span>
                 </span>
             </div>
             <b class="categories">{{ sanpham.danhmuc.ten_dm }}</b>
@@ -39,7 +39,7 @@
                 <p class="message">{{ sanpham.mo_ta_ngan }}</p>
                 <div class="buttons">
                     <a href="#" class="btn wishlist-btn" tabindex="0"><i class="fa fa-heart" aria-hidden="true"></i></a>
-                    <a href="#" class="btn add-to-cart-btn btn-danger" tabindex="0">add to cart</a>
+                    <a href="#" class="btn add-to-cart-btn btn-danger" tabindex="0">Thêm vào giỏ hàng</a>
                     <a href="#" class="btn compare-btn" tabindex="0"><i class="fa fa-random" aria-hidden="true"></i></a>
                 </div>
             </div>

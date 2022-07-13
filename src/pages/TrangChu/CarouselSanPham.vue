@@ -16,8 +16,8 @@
                             <h3 class="second-line">{{ slide.secondary_text }}</h3>
                             <p class="third-line">{{ slide.description }}</p>
                             <p class="buttons">
-                                <a href="#" class="btn btn-bold" tabindex="0">Mua ngay</a>
-                                <router-link :to="slide.link_product" class="btn btn-thin" >Xem chi tiết</router-link>
+                                <a href="#" class="btn__slider btn__buynow" tabindex="0">Mua ngay</a>
+                                <router-link to="#" class="btn__slider btn__detail" >Xem chi tiết</router-link>
                             </p>
                         </div>
                     </div>
@@ -35,7 +35,6 @@ import { computed } from "vue";
 import { useStore } from "vuex";
 import { Carousel, Navigation, Slide } from 'vue3-carousel';
 import { FETCH_ALL_SLIDERS } from '@/store/action.type';
-
 
 export default {
     name: "CarouselSanPham",
@@ -97,7 +96,7 @@ export default {
     text-align: left;
     line-height: 30px;
     transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.5);
     padding: 20px 40px;
     border-radius: 5px;
     width: 600px;
@@ -141,5 +140,22 @@ export default {
     background-color: transparent;
     color: #e73918;
     border: 2px solid #e73918;
+}
+.btn__slider {
+    border-radius: 30px !important;
+    padding: 10px 20px !important;
+    border: 2px solid #e73918 !important;
+}
+.btn__buynow {
+    background-color: #e73918;
+    color: #fff;
+}
+.btn__detail {
+    border-color: #e73918 !important;
+    color: #e73918 !important;
+}
+.btn__detail:hover {
+    color: #fff !important;
+    background-color: #e73918;
 }
 </style>

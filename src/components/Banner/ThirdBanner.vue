@@ -3,10 +3,12 @@
         <div class="banner-contain">
             <a href="#" class="bn-link"></a>
             <div class="text-content">
-                <span class="first-line">Daily Fresh</span>
-                <b class="second-line">Natural</b>
-                <i class="third-line">Fresh Food</i>
-                <span class="fourth-line">Premium Quality</span>
+                <span class="first-line">Rau củ quả</span>
+                <div class="text-wrapper my-2">
+                    <b class="second-line">Thực phẩm</b>
+                    <b class="second-line">Tươi ngon</b>
+                </div>
+                <span class="fourth-line">Chất lượng đảm bảo</span>
             </div>
         </div>
     </div>
@@ -24,4 +26,11 @@ export default {
 </script>
 
 <style scoped>
+.text-wrapper {
+    margin: 10px 0 !important;
+}
+.second-line {
+    font-size: 30px !important;
+    font-weight: bold !important;
+}
 </style>

@@ -6,7 +6,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 product__top">
                 <Carousel :items-to-show="5">
                     <Slide v-for="sanpham in topSanPham" :key="sanpham.id">
                         <TopSanPhamItem :sanpham="sanpham" />
@@ -51,25 +51,37 @@
                                     </option>
                                 </select>
                             </div>
+                            <div class="wrap-selectors">
+                                <select
+                                    class="form-control product-sorting"
+                                    v-model="filter.nhacungcap_id"
+                                >
+                                    <option
+                                        v-for="ncc in nhacungcaps"
+                                        :key="ncc.id"
+                                        :value="ncc.id"
+                                    >
+                                        {{ ncc.ten_ncc }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="wrap-selectors">
+                                <select
+                                    class="form-control product-sorting"
+                                    v-model="filter.danhmuc_id"
+                                >
+                                    <option
+                                        v-for="dm in danhmucs"
+                                        :key="dm.id"
+                                        :value="dm.id"
+                                    >
+                                        {{ dm.ten_dm }}
+                                    </option>
+                                </select>
+                            </div>
+                            <button @click="resetFilter" class="btn btn__reset">Làm mới</button>
                         </div>
                         <div class="flt-item to-right">
-                            <span class="flt-title">Sort</span>
-                            <div class="wrap-selectors">
-                                <div class="selector-item orderby-selector">
-                                    <select name="orderby" class="orderby" aria-label="Shop order" style="display: none;">
-                                        <option value="menu_order" selected="selected">Default sorting</option>
-                                        <option value="popularity">popularity</option>
-                                        <option value="rating">average rating</option>
-                                        <option value="date">newness</option>
-                                        <option value="price">price: low to high</option>
-                                        <option value="price-desc">price: high to low</option>
-                                    </select><div class="nice-select orderby" tabindex="0"><span class="current">Default sorting</span><ul class="list"><li data-value="menu_order" class="option selected focus">Default sorting</li><li data-value="popularity" class="option">popularity</li><li data-value="rating" class="option">average rating</li><li data-value="date" class="option">newness</li><li data-value="price" class="option">price: low to high</li><li data-value="price-desc" class="option">price: high to low</li></ul></div>
-                                </div>
-                                <div class="selector-item viewmode-selector">
-                                    <a href="#" class="viewmode grid-mode active"><i class="biolife-icon icon-grid"></i></a>
-                                    <a href="#" class="viewmode detail-mode"><i class="biolife-icon icon-list"></i></a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -89,7 +101,7 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
@@ -97,10 +109,10 @@ import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import TopSanPhamItem from "@/components/DanhSachSanPham/TopSanPhamItem";
 import SanPham from "@/pages/SanPham/SanPham";
 import {
-    ADD_TO_CART,
+    ADD_TO_CART, FETCH_ALL_DANHMUC, FETCH_ALL_NHACUNGCAP,
     FETCH_ALL_SANPHAMS,
-    FETCH_SANPHAMS_UUDAI, GET_SAN_PHAM_FROM_TO,
-    ORDER_SAN_PHAM_THEO_GIA
+    FETCH_SANPHAMS_UUDAI, GET_SAN_PHAM_FROM_DANHMUC, GET_SAN_PHAM_FROM_NHACUNGCAP, GET_SAN_PHAM_FROM_TO,
+    ORDER_SAN_PHAM_THEO_GIA, RESET_FILTER
 } from "@/store/action.type";
 import { VNDFormat } from "@/utils/helpers";
 
@@ -120,13 +132,27 @@ export default {
 
         store.dispatch(FETCH_ALL_SANPHAMS);
         store.dispatch(FETCH_SANPHAMS_UUDAI);
+        store.dispatch(FETCH_ALL_NHACUNGCAP)
+        store.dispatch(FETCH_ALL_DANHMUC)
 
+        const filter = reactive({
+            nhacungcap_id: null,
+            danhmuc_id: null
+        })
 
         const sanphams = computed(() => store.state.products.sanphams)
         const refSanPham = ref([]);
         const topSanPham = computed(() => store.getters.getSanPhamUuDai);
         const breadcrumbs = computed(() => route.meta.breadcrumbs);
+        const nhacungcaps = computed(() => store.state.products.nhacungcaps)
+        const danhmucs = computed(() => store.state.products.danhmucs)
 
+        watch(() => filter.nhacungcap_id, (curr) => {
+            store.dispatch(GET_SAN_PHAM_FROM_NHACUNGCAP, curr)
+        })
+        watch(() => filter.danhmuc_id, (curr) => {
+            store.dispatch(GET_SAN_PHAM_FROM_DANHMUC, curr)
+        })
         const handleThemVaoGioHang = (sanpham) => {
             store.dispatch(ADD_TO_CART, {
               sanpham,
@@ -170,7 +196,9 @@ export default {
                     break;
             }
         }
-
+        const resetFilter = () => {
+            store.dispatch(RESET_FILTER)
+        }
         return {
             breadcrumbs,
             topSanPham,
@@ -179,7 +207,11 @@ export default {
             handleThemVaoGioHang,
             handlePriceSort,
             getPriceFromTo,
-            VNDFormat
+            VNDFormat,
+            filter,
+            nhacungcaps,
+            danhmucs,
+            resetFilter
         }
     }
 };
@@ -201,5 +233,29 @@ select.product-sorting:focus {
 }
 .wrap-selectors {
     margin: 0 10px;
+}
+.btn__reset {
+    border: 2px solid transparent !important;
+    border-radius: 20px !important;
+    background-color: #d9534f !important;
+    color: #fff !important;
+}
+.btn__reset:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background-color: #d91d17 !important;
+}
+.product__top .carousel__prev {
+    background-color: #f4f4f4;
+    transition: background-color .2s linear;
+}
+.product__top .carousel__next {
+    background-color: #f4f4f4;
+    transition: background-color .2s linear;
+}
+.carousel__prev:hover,
+.carousel__next:hover{
+    background-color: #ccc;
 }
 </style>

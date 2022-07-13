@@ -3242,12 +3242,6 @@ body.open-mobile-search .header-area.layout-02{
 body:not(.open-overlay) .header-area.layout-01{
     z-index: 20;
 }
-.background-mega-01{
-    background: url("../images/megamenu/vegetable-mega-bg.png");
-}
-.background-mega-02{
-    background: url("../images/megamenu/megamenu-bg-02.jpg");
-}
 .max-width-270{
     max-width: 270px;
 }
@@ -5050,12 +5044,6 @@ body.open-overlay #overlay{
 .rating .star-rating > span::before{
     color: #ffbc53;
 }
-.background-top-banner-for-shopping{
-    background: url(../images/top_banner_shopping_cart.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-}
 .top-banner{
     color: #ffffff;
     text-align: center;
@@ -6225,7 +6213,6 @@ body.open-overlay #overlay{
     margin: 0 0 30px;
 }
 .single-post-contain .post-content blockquote::before{
-    content: url(../images/blogpost/double-quote.png);
     display: block;
     opacity: 0.1;
     filter: alpha(opacity=10);
@@ -8067,16 +8054,6 @@ li.slick-current .slider-opt04__layout01 .buttons .btn{
 .biolife-banner__promotion3 .product-detail .add-to-cart-btn{
     display: inline-block;
     vertical-align: middle;
-}
-.biolife-banner__promotion4{
-    display: block;
-    clear: both;
-    background: url('../images/home-04/banner-promotion01.jpg');
-    background-position: center center;
-    background-size: cover;
-    height: 650px;
-    font-size: 0;
-    line-height: 0;
 }
 .biolife-banner__promotion4 .banner-contain{
     display: block;

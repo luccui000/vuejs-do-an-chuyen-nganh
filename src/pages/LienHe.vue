@@ -4,8 +4,7 @@
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                 <div class="contact-info-container sm-margin-top-27px xs-margin-bottom-60px xs-margin-top-60px">
-                    <h4 class="box-title">Our Contact</h4>
-                    <p class="frst-desc">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.</p>
+                    <h4 class="box-title">Liên hệ với chúng tôi</h4>
                     <ul class="addr-info">
                         <li>
                             <div class="if-item">

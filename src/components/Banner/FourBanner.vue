@@ -7,11 +7,11 @@
                         <a href="#" class="bn-link"><img src="assets/images/home-05/media-banner-11.jpg" width="281" height="358" alt=""></a>
                     </div>
                     <div class="text-content">
-                        <span class="text1">California</span>
-                        <b class="text2">Fresh Fruit</b>
-                        <span class="text3">Association</span>
-                        <b class="text4">Sale <span>50%</span> Off</b>
-                        <a href="#" class="btn btn-bold">Shop now</a>
+                        <span class="text1">Khuyến mãi</span>
+                        <b class="text2">Nhập khẩu</b>
+                        <span class="text3">Kết hợp</span>
+                        <b class="text4">Giảm <span>50%</span> giá</b>
+                        <a href="#" class="btn btn-bold">Mua ngay</a>
                     </div>
                 </div>
             </div>
@@ -23,9 +23,9 @@
                         <a href="#" class="bn-link"><img src="assets/images/home-05/media-banner-12.jpg" width="281" height="358" alt=""></a>
                     </div>
                     <div class="text-content">
-                        <i class="text1">Sumer Fruit</i>
-                        <b class="text2">100% Pure Natural Fruit Juice</b>
-                        <a href="#" class="btn btn-thin">Shop now</a>
+                        <i class="text1">Thức uống hè này</i>
+                        <b class="text2">100% hòan toàn tự nhiên</b>
+                        <a href="#" class="btn btn-thin">Mua ngay</a>
                     </div>
                 </div>
             </div>
